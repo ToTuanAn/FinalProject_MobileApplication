@@ -1,5 +1,6 @@
 import COLORS from '../../const/colors';
 import {
+  ToastAndroid,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +15,7 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {IdType} from 'near-api-js/lib/providers/provider';
-import {auth} from '../../../firebase'
+import {auth, db} from '../../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const SignInScreen = ({navigation}) => {
@@ -55,15 +56,17 @@ const SignInScreen = ({navigation}) => {
   };
 
   const handleSignIn = (navigation) => {
-    //console.log(data.email, data.password);
-    //console.log(auth)
-    signInWithEmailAndPassword(auth, data.email, data.password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      //console.log(user);
-      navigation.navigate('HomeScreen')
-    })
-    .catch(error => alert(error.message))
+    return async dispatch => {
+      await signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        if (Platform.OS === 'android') {
+          ToastAndroid.show('Log in successfully', ToastAndroid.SHORT)
+        }
+        navigation.navigate('HomeScreen')
+      })
+      .catch(error => alert(error.message))
+    }
   }
 
   return (

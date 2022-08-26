@@ -15,6 +15,9 @@ import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import pets from '../../const/pets';
 const {height} = Dimensions.get('window');
+import {ref, set, get, update, remove, child} from "firbase/database"
+import {db}  from '../../../firebase'
+
 const petCategories = [
   {name: 'CATS', icon: 'cat'},
   {name: 'DOGS', icon: 'dog'},

@@ -15,9 +15,9 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {IdType} from 'near-api-js/lib/providers/provider';
-import {auth} from '../../../firebase'
+import {auth, db} from '../../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 import { ScrollView } from 'react-native-gesture-handler';
 
 
@@ -33,17 +33,30 @@ const SignUpScreen = ({navigation}) => {
     confirm_securedPassword: true
   });
 
-  //console.log(auth)
 
+  //console.log(db)
   const handleSignUp = (navigation) => {
-    //console.log(data.email, data.password);
-    //console.log(auth)
+    
     return async dispatch => {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(userCredentials => {
-        const user = userCredentials.user;
+          
+          const userData = {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+          };
+          //console.log(db);
+          //console.log(userData);
+          
+          const newUserRef = collection(db, "users");
+          const newUser = doc(newUserRef, userCredentials.user.uid);
+          console.log(newUser.key.path.segments);
+          setDoc(newUser, userData);
+          //db.collection('users').doc(userCredentials).set(userData);
+      }).then( ()=> {
         if (Platform.OS === 'android') {
-          ToastAndroid.show('Sign Up successfully', ToastAndroid.SHORT)
+          ToastAndroid.show('Sign up successfully', ToastAndroid.SHORT)
         }
         navigation.navigate('HomeScreen')
       })
