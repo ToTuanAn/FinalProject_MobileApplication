@@ -9,6 +9,7 @@ import {
 import {View, Image, Text, StatusBar} from 'react-native';
 import Animated from 'react-native-reanimated';
 import HomeScreen from '../screens/HomeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -162,7 +163,7 @@ const DrawerNavigator = () => {
         }}>
         {props => (
           <DrawerScreenContainer>
-            <HomeScreen {...props} />
+            <ProfileScreen {...props} />
           </DrawerScreenContainer>
         )}
       </Drawer.Screen>

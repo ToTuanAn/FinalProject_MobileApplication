@@ -5,6 +5,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DrawerNavigator from './src/views/navigators/DrawerNavigator';
 import DetailsScreen from './src/views/screens/DetailsScreen';
 import AuthenticationScreen from './src/views/screens/AuthenticationsScreen';
+import ProfileScreen from './src/views/screens/ProfileScreen';
+import SignInScreen from './src/views/screens/SignInScreen';
+import SignUpScreen from './src/views/screens/SignUpScreen';
+import EditProfileScreen from './src/views/screens/EditProfileScreen';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -21,8 +25,12 @@ const App = () => {
             },
           }}
         />
+        <Stack.Screen name = "SignInScreen" component={SignInScreen} />
+        <Stack.Screen name = "SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="HomeScreen" component={DrawerNavigator} />
         <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
