@@ -51,7 +51,7 @@ const SignUpScreen = ({navigation}) => {
           
           const newUserRef = collection(db, "users");
           const newUser = doc(newUserRef, userCredentials.user.uid);
-          console.log(newUser.key.path.segments);
+          //console.log(newUser.key.path.segments);
           setDoc(newUser, userData);
           //db.collection('users').doc(userCredentials).set(userData);
       }).then( ()=> {
