@@ -15,22 +15,30 @@ import { useMemo } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
-import SelectDropdown from 'react-native-select-dropdown'
-
-
-const EditProfileScreen = ({navigation, route}) => {
-  const petType = ["Egypt", "Canada", "Australia", "Ireland"]
+//import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import SelectDropdown from 'react-native-select-dropdown';
+import DropDownPicker from 'react-native-dropdown-picker';
+const AddPetScreen = ({navigation, route}) => {
 
   const [image,setImage] = useState('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/273798571_3047592772150453_1171043902568185126_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=tGeuSYDaILsAX-cvxJB&tn=rjuYXE7PEOaN48pk&_nc_ht=scontent.fsgn8-3.fna&oh=00_AT-R7h61g_Op9tMJEn7ta6bkKY_35WHhEt8k-N0R5CmowQ&oe=630B86F0')
+
+  const [petData, setPetData] = React.useState({
+    name: '',
+    type: '',
+    gender :'',
+    checkInputChanged: false,
+  });
+  const petType = ["Egypt", "Canada", "Australia", "Ireland"]
 
 
 const openGalery = () =>{
     ImagePicker.openPicker({
       width: 300,
-      height: 400,
+      height: 200,
       cropping: true
     }).then(image => {
       console.log(image);
@@ -39,16 +47,15 @@ const openGalery = () =>{
 }
   
   return (
-    <View style = {styles.container}>
+    <SafeAreaView style = {styles.container}>
+     <Icon style = {{marginTop : 10 , marginLeft : 20 }} name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
        <View style={styles.toggle}>
-        <Icon name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
-        <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 16}}>
-          JANE GARY
+        <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 25}}>
+          Add your pet information
         </Text>
       </View>
       
-      <View style={{margin: 20}}>
-       
+      <View style={{margin: 10}}>
         <View style = {{alignItems:'center'}}>
             <TouchableOpacity onPress={openGalery}>
                 <View style = {styles.ava} >
@@ -56,7 +63,7 @@ const openGalery = () =>{
                     source={{
                         uri : image
                     }}
-                    style ={{height : 100 , width : 100}}
+                    style ={{height : 200 , width : 300}}
                     imageStyle = {{borderRadius:15}}
                     >
                       <View style = {{
@@ -80,27 +87,14 @@ const openGalery = () =>{
                     </ImageBackground>
                 </View>
             </TouchableOpacity>
-
-            <Text style ={{
-              marginTop : 10,
-              fontSize : 18,
-              fontWeight : 'bold',
-            }}>
-              User name
-              </Text>
-
-              <Text style ={{
-              marginTop : 10,
-              fontSize : 18,
-              fontWeight : 'bold',
-            }}>
-              Email
-              </Text>
+            </View>
+        
+            <View style = {{marginTop :60,alignItems:'center'}}>
 
               <View style = {styles.action}>
-                <FontAwesome name ="user-o" size = {20}/>
+                <MaterialIcons name ="pets" size = {20}/>
                 <TextInput
-                  placeholder='First name'
+                  placeholder='Add your pet name'
                   autoCorrect = {false}
                   placeholderTextColor="#666666"
                   style = {styles.textInput}
@@ -110,7 +104,7 @@ const openGalery = () =>{
               <View style = {styles.action}>
                 <Icon name ="rename-box" size = {20}/>
                 <TextInput
-                  placeholder='Last name'
+                  placeholder='Add your pet gender'
                   autoCorrect = {false}
                   placeholderTextColor="#666666"
                   style = {styles.textInput}
@@ -119,45 +113,57 @@ const openGalery = () =>{
 
 
               <View style = {styles.action}>
-                <FontAwesome name ="phone" size = {20}/>
+                <FontAwesome name ="question" size = {20}/>
                 <TextInput
-                  placeholder='Phone'
+                  placeholder='Age'
                   autoCorrect = {false}
                   placeholderTextColor="#666666"
                   style = {styles.textInput}
                 />
               </View>
 
+              
+              <DropDownPicker
+                    items={[
+                        {label: 'France', value: 'fr'},
+                        {label: 'Spain', value: 'es' , selected: true},
+                    ]}
+
+                    defaultIndex={0}
+                    placeholder="Select type"
+                    containerStyle={styles.action}
+                    onChangeItem={item => this.changeCountry(item)}
+                />
+              
               <View style = {styles.action}>
                 <FontAwesome name ="globe" size = {20}/>
                 <TextInput
-                  placeholder='Country'
+                  placeholder='Description'
                   autoCorrect = {false}
                   placeholderTextColor="#666666"
                   style = {styles.textInput}
                 />
-              </View>
+              </View> 
+              
         </View>
-            
-        <TouchableOpacity style = {styles.commandButton}>
-            <Text style={styles.panelButtonTitle}>Submit</Text>  
-        </TouchableOpacity>
 
+        <TouchableOpacity style = {styles.commandButton}>
+              <Text style={styles.panelButtonTitle}>Done</Text>  
+        </TouchableOpacity>
       </View>
 
-
      
-    </View>
+    </SafeAreaView>
   )
 }
 
-export default EditProfileScreen;
+export default AddPetScreen;
 
 const styles = StyleSheet.create({
   toggle: {
     padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
     ava : {
@@ -166,6 +172,7 @@ const styles = StyleSheet.create({
         borderRadius :15 , 
         justifyContent : 'center' , 
         alignItems : 'center',
+        marginTop : 40,
     },
   container: {
     flex: 1,
@@ -177,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: COLORS.violet,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   panel: {
     padding: 20,

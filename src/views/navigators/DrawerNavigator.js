@@ -12,7 +12,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import AddPetScreen from '../screens/AddPetScreen';
 const Drawer = createDrawerNavigator();
 
 const DrawerScreenContainer = ({children}) => {
@@ -135,7 +135,7 @@ const DrawerNavigator = () => {
         }}>
         {props => (
           <DrawerScreenContainer>
-            <HomeScreen {...props} />
+            <AddPetScreen {...props} />
           </DrawerScreenContainer>
         )}
       </Drawer.Screen>
