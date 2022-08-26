@@ -51,7 +51,7 @@ export const AuthenticationScreen = ({navigation}) => {
                 color: COLORS.black
             }]}>NFT Cryto Art</Text>
             <View style={style.button}>
-            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
                 <LinearGradient
                     colors={['#9F21FD','#01ab9d']}
                     style={style.start}

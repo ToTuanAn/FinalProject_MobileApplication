@@ -14,6 +14,10 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {IdType} from 'near-api-js/lib/providers/provider';
+import {auth} from '../../../firebase'
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+
 
 const SignUpScreen = ({navigation}) => {
   const [data, setData] = React.useState({
@@ -24,6 +28,19 @@ const SignUpScreen = ({navigation}) => {
     securedPassword: true,
     confirm_securedPassword: true
   });
+
+  //console.log(auth)
+
+  const handleSignUp = () => {
+    //console.log(data.email, data.password);
+    //console.log(auth)
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      console.log(user.email);
+    })
+    .catch(error => alert(error.message))
+  }
 
   const textInputChanged = (val) => {
     if (val.length != 0) {
@@ -134,16 +151,12 @@ const SignUpScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <View style={style.button} >
-                <LinearGradient
-                    colors={['#9F21FD','#01ab9d']}
-                    style={style.signIn}
-                > 
-                    <Text style={[style.textSign,{color:'#fff'}]}>Register</Text>
-                   
-                   
-                </LinearGradient>
-        </View>
+        <TouchableOpacity style={style.button} onPress={handleSignUp}>
+        <LinearGradient colors={['#9F21FD','#01ab9d']} style={style.signIn}> 
+          <Text style={[style.textSign,{color:'#fff'}]}>Register</Text>
+        </LinearGradient>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.goBack()}
         style={[style.signIn,{
             borderColor:"#009387",
