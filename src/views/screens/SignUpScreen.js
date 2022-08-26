@@ -1,5 +1,6 @@
 import COLORS from '../../const/colors';
 import {
+  ToastAndroid,
   StyleSheet,
   Text,
   TextInput,
@@ -17,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IdType} from 'near-api-js/lib/providers/provider';
 import {auth} from '../../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const SignUpScreen = ({navigation}) => {
@@ -34,15 +35,20 @@ const SignUpScreen = ({navigation}) => {
 
   //console.log(auth)
 
-  const handleSignUp = () => {
+  const handleSignUp = (navigation) => {
     //console.log(data.email, data.password);
     //console.log(auth)
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log(user.email);
-    })
-    .catch(error => alert(error.message))
+    return async dispatch => {
+      await createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        if (Platform.OS === 'android') {
+          ToastAndroid.show('Sign Up successfully', ToastAndroid.SHORT)
+        }
+        navigation.navigate('HomeScreen')
+      })
+      .catch(error => alert(error))
+    }
   }
 
   const textInputChanged = (val) => {
@@ -66,7 +72,7 @@ const SignUpScreen = ({navigation}) => {
       setData({
         ...data,
         name: val,
-        checkInputNameChanged: true,
+        checkInputNameChanged: false,
       });
     } else {
       setData({
@@ -113,6 +119,7 @@ const SignUpScreen = ({navigation}) => {
       <Animatable.View
         animation="fadeInRightBig"
         style={[style.footer, {backgroundColor: COLORS.white}]}>
+          <ScrollView>
         <Text style={style.text_footer}>User name</Text>
         <View style={style.action}>
           <FontAwesome name="user-o" color="#05375A" size={20} />
@@ -187,7 +194,7 @@ const SignUpScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={style.button} onPress={handleSignUp}>
+        <TouchableOpacity style={style.button} onPress={handleSignUp(navigation)}>
         <LinearGradient colors={['#9F21FD','#01ab9d']} style={style.signIn}> 
           <Text style={[style.textSign,{color:'#fff'}]}>Register</Text>
         </LinearGradient>
@@ -205,7 +212,7 @@ const SignUpScreen = ({navigation}) => {
         }]}>Sign in</Text>
         </TouchableOpacity>
 
-
+        </ScrollView>
       </Animatable.View>
     </View>
   );

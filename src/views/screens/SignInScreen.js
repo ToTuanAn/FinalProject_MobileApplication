@@ -14,6 +14,9 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {IdType} from 'near-api-js/lib/providers/provider';
+import {auth} from '../../../firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 const SignInScreen = ({navigation}) => {
   const [data, setData] = React.useState({
     email: '',
@@ -50,6 +53,18 @@ const SignInScreen = ({navigation}) => {
       securedPassword: !data.securedPassword,
     });
   };
+
+  const handleSignIn = (navigation) => {
+    //console.log(data.email, data.password);
+    //console.log(auth)
+    signInWithEmailAndPassword(auth, data.email, data.password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      //console.log(user);
+      navigation.navigate('HomeScreen')
+    })
+    .catch(error => alert(error.message))
+  }
 
   return (
     <View style={style.container}>
@@ -97,7 +112,7 @@ const SignInScreen = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+            <TouchableOpacity onPress={handleSignIn(navigation)}>
             <View style={style.button} >
                 <LinearGradient
                     colors={['#9F21FD','#01ab9d']}
