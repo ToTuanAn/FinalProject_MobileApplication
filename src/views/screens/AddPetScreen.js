@@ -8,31 +8,53 @@ import {
   TextInput,
   StyleSheet
 } from 'react-native';
-import { Platform } from 'react-native';
-
-import {useTheme} from 'react-native-paper';
-import { useMemo } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
 //import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SelectDropdown from 'react-native-select-dropdown';
+
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useForm, Controller} from 'react-hook-form';
+import { ScrollView } from 'react-native-gesture-handler';
 const AddPetScreen = ({navigation, route}) => {
 
-  const [image,setImage] = useState('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/273798571_3047592772150453_1171043902568185126_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=tGeuSYDaILsAX-cvxJB&tn=rjuYXE7PEOaN48pk&_nc_ht=scontent.fsgn8-3.fna&oh=00_AT-R7h61g_Op9tMJEn7ta6bkKY_35WHhEt8k-N0R5CmowQ&oe=630B86F0')
+  const [image,setImage] = useState('https://dogoquangthich.com/wp-content/uploads/woocommerce-placeholder-800x800.png')
 
-  const [petData, setPetData] = React.useState({
-    name: '',
-    type: '',
-    gender :'',
-    checkInputChanged: false,
-  });
-  const petType = ["Egypt", "Canada", "Australia", "Ireland"]
+  
+  const [genderOpen, setGenderOpen] = useState(false);
+  const [genderValue, setGenderValue] = useState(null);
+  const [gender, setGender] = useState([
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+  ]);
+  const [speciesOpen, setSpeciesOpen] = useState(false);
+  const [speciesValue, setSpeciesValue] = useState(null);
+  const [species, setSpecies] = useState([
+    { label: "Cat", value: "cat" },
+    { label: "Dog", value: "dog" },
+    { label: "Bunny", value: "bunny" },
+    { label: "Bird", value: "bird" },
+  ]);
+  const [loading, setLoading] = useState(false);
+
+  const onGenderOpen = React.useCallback(() => {
+    setSpeciesOpen(false);
+  }, []);
+
+  const onSpeciesOpen = React.useCallback(() => {
+    setGenderOpen(false);
+  }, []);
+  const { handleSubmit, control } = useForm();
+
+  // submit all information of the pet
+  const onSubmit = (data) => {
+    //data.append("image",image.path)
+    data["image"] = image;
+    console.log(data, "data");
+  };
+ 
 
 
 const openGalery = () =>{
@@ -47,16 +69,157 @@ const openGalery = () =>{
 }
   
   return (
-    <SafeAreaView style = {styles.container}>
-     <Icon style = {{marginTop : 10 , marginLeft : 20 }} name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
-       <View style={styles.toggle}>
-        <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 25}}>
-          Add your pet information
-        </Text>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <SafeAreaView style={styles.container}>
+    <View style={styles.headerContainer}>
+      <TouchableOpacity style={styles.backArrow}>
+        <Icon name="arrow-left" size={30} />
+      </TouchableOpacity>
+      <View style={styles.title}>
+        <Text style={styles.titleText}>Add your pet information</Text>
+      </View>
+    </View>
+      
+      <Text style={styles.label}>Your pet name</Text>
+      <Controller
+        name="name"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            style={styles.input}
+            selectionColor={"#5188E3"}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
+      <Text style={styles.label}>Your pet breed</Text>
+      <Controller
+        name="breed"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            style={styles.input}
+            selectionColor={"#5188E3"}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      <View>
+      <Text style={styles.label}>Gender</Text>
+      <View style ={{
+        flexDirection : "row"
+      }}>
+      <Controller
+        name="gender"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.dropdownGender}>
+            <DropDownPicker
+              style={styles.dropdown}
+              open={genderOpen}
+              value={genderValue} //genderValue
+              items={gender}
+              setOpen={setGenderOpen}
+              setValue={setGenderValue}
+              setItems={setGender}
+              placeholder="Select Gender"
+              placeholderStyle={styles.placeholderStyles}
+              onOpen={onGenderOpen}
+              onChangeValue={onChange}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
+          </View>
+        )}
+      />
+      
+      <Controller
+        name="age"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            style={{
+              borderStyle: "solid",
+              borderColor: "#B7B7B7",
+              borderRadius: 7,
+              borderWidth: 1,
+              fontSize: 15,
+              height: 50,
+              flex : 1,
+              marginHorizontal: 15,
+              paddingStart: 10,
+              marginBottom: 15,
+              alignItems : 'center',
+            }}
+            placeholder = 'Select age'
+            keyboardType = 'numeric'
+            selectionColor={"#5188E3"}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
+
       </View>
       
-      <View style={{margin: 10}}>
-        <View style = {{alignItems:'center'}}>
+
+      <Text style={styles.label}>Your pet species</Text>
+      <Controller
+        name="species"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.dropdownCompany}>
+            <DropDownPicker
+              style={styles.dropdown}
+              open={speciesOpen}
+              value={speciesValue} //speciesValue
+              items={species}
+              setOpen={setSpeciesOpen}
+              setValue={setSpeciesValue}
+              setItems={setSpecies}
+              placeholder="Select Species"
+              placeholderStyle={styles.placeholderStyles}
+              loading={loading}
+              activityIndicatorColor="#5188E3"
+              searchable={true}
+              searchPlaceholder="Search species here..."
+              onOpen={onSpeciesOpen}
+              onChangeValue={onChange}
+               zIndex={1000}
+              zIndexInverse={3000}
+            />
+          </View>
+        )}
+      />
+      </View>
+      <Text style={styles.label}>Add some description</Text>
+      <Controller
+        name="description"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            multiline={true}
+            style={styles.input}
+            selectionColor={"#5188E3"}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
+
+        <Text style={styles.label}>Add picture of your pet</Text>
+          <View style = {{alignItems:'center'}}>
             <TouchableOpacity onPress={openGalery}>
                 <View style = {styles.ava} >
                     <ImageBackground
@@ -89,181 +252,102 @@ const openGalery = () =>{
             </TouchableOpacity>
             </View>
         
-            <View style = {{marginTop :60,alignItems:'center'}}>
+   
+    
 
-              <View style = {styles.action}>
-                <MaterialIcons name ="pets" size = {20}/>
-                <TextInput
-                  placeholder='Add your pet name'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
-              </View>
+      <TouchableOpacity style = {{marginBottom : 20,backgroundColor: COLORS.violet}} onPress={handleSubmit(onSubmit)}>
+        <Text style={styles.getStarted}>Done</Text>
+      </TouchableOpacity>
 
-              <View style = {styles.action}>
-                <Icon name ="rename-box" size = {20}/>
-                <TextInput
-                  placeholder='Add your pet gender'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
-              </View>
-
-
-              <View style = {styles.action}>
-                <FontAwesome name ="question" size = {20}/>
-                <TextInput
-                  placeholder='Age'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
-              </View>
-
-              
-              <DropDownPicker
-                    items={[
-                        {label: 'France', value: 'fr'},
-                        {label: 'Spain', value: 'es' , selected: true},
-                    ]}
-
-                    defaultIndex={0}
-                    placeholder="Select type"
-                    containerStyle={styles.action}
-                    onChangeItem={item => this.changeCountry(item)}
-                />
-              
-              <View style = {styles.action}>
-                <FontAwesome name ="globe" size = {20}/>
-                <TextInput
-                  placeholder='Description'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
-              </View> 
-              
-        </View>
-
-        <TouchableOpacity style = {styles.commandButton}>
-              <Text style={styles.panelButtonTitle}>Done</Text>  
-        </TouchableOpacity>
-      </View>
-
-     
+      
     </SafeAreaView>
+    </ScrollView>
   )
 }
 
 export default AddPetScreen;
 
 const styles = StyleSheet.create({
-  toggle: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  headerContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 25,
+    alignItems:'center',
   },
-    ava : {
-        height : 100,
-        width : 100,
-        borderRadius :15 , 
-        justifyContent : 'center' , 
-        alignItems : 'center',
-        marginTop : 40,
-    },
   container: {
     flex: 1,
-    backgroundColor : COLORS.white,
-
+  },
+  input: {
+    borderStyle: "solid",
+    borderColor: "#B7B7B7",
+    borderRadius: 7,
+    borderWidth: 1,
+    fontSize: 15,
+    height: 50,
+    marginHorizontal: 10,
+    paddingStart: 10,
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 7,
+    marginStart: 10,
+  },
+  placeholderStyles: {
+    color: "grey",
+  },
+  dropdownGender: {
+    marginHorizontal: 10,
+    width: "50%",
+    marginBottom: 15,
+  },
+  dropdownCompany: {
+    marginHorizontal: 10,
+    marginBottom: 15,
+  },
+  dropdown: {
+    borderColor: "#B7B7B7",
+    height: 50,
+  },
+  getStarted: {
+    backgroundColor: "#5188E3",
+    color: "white",
+    textAlign: "center",
+    marginHorizontal: 60,
+    paddingVertical: 15,
+    borderRadius: 50,
+    marginTop: 20,
+  },
+  logIn: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 10,
+  },
+  links: {
+    textAlign: "center",
+    textDecorationLine: "underline",
+    color: "#758580",
   },
   commandButton: {
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: COLORS.violet,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
-  },
-  header: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
-    shadowRadius: 2,
-    shadowOpacity: 0.4,
-    // elevation: 5,
-    paddingTop: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  panelHeader: {
-    alignItems: 'center',
-  },
-  panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginBottom: 10,
-  },
-  panelTitle: {
-    fontSize: 27,
-    height: 35,
-  },
-  panelSubtitle: {
-    fontSize: 14,
-    color: 'gray',
-    height: 30,
-    marginBottom: 10,
-  },
-  panelButton: {
-    padding: 13,
-    borderRadius: 10,
-    backgroundColor: '#FF6347',
-    alignItems: 'center',
-    marginVertical: 7,
-  },
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#909992',
-    paddingBottom: 1,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    fontSize:16,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
+        padding: 15,
+        borderRadius: 10,
+        backgroundColor: COLORS.violet,
+        alignItems: 'center',
+        marginTop: 10,
+      },
+        panelButtonTitle: {
+              fontSize: 17,
+              fontWeight: 'bold',
+              color: 'white',
+            },
+            backArrow: {
+              marginLeft: 10,
+            },
+            title: {
+              alignSelf: "center",
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "center",
+            },
+            titleText: {  fontSize: 20,marginRight: 40 },
 });
+
