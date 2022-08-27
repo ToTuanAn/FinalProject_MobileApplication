@@ -46,10 +46,12 @@ export const AuthenticationScreen = ({navigation}) => {
         >
             <Text style={[style.title, {
                 color: COLORS.black
-            }]}>Collecting Best</Text>
-            <Text style={[style.title, {
-                color: COLORS.black
-            }]}>NFT Cryto Art</Text>
+            }]}>SaiGon Pet Adoption</Text>
+            <Text style={{
+              fontSize : 17,
+              fontFamily: "Cochin",
+              marginTop : 15,
+            }}>Find your new best friend</Text>
             <View style={style.button}>
             <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
                 <LinearGradient

@@ -31,13 +31,22 @@ const ProfileScreen = ({navigation, route}) => {
   });
 
   }
+  const [data,setData] = React.useState({
+    userName : 'User Name',
+    email : 'your@email.com',
+    numsBud: 0,
+    donate : 0,
+    fullName :' your name',
+    address : 'your address',
+    phone : 'phone No',
+  });
 
   return (
     <SafeAreaView style={styles.container} >
       <View style={styles.header}>
         <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
         <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 16}}>
-          JANE GARY
+          {data.userName}
         </Text>
       </View>
       <View style = {styles.userInfoSection}>
@@ -50,11 +59,12 @@ const ProfileScreen = ({navigation, route}) => {
             <Title style={[styles.title, {
               marginTop:15,
               marginBottom: 5,
-            }]}>Thien Tri Luong</Title>
-            <Caption style={styles.caption}>@t_tri</Caption>
+            }]}>{data.fullName}</Title>
+            <Caption style={styles.caption}>{data.userName}</Caption>
           </View>
+
           <TouchableOpacity 
-          style={{marginLeft: 30 , marginTop:30}}
+          style={{marginStart : 20, marginTop:30}}
           onPress = {() => navigation.navigate('EditProfileScreen')}
           >
             <Icon name = "account-edit" size = {30} />
@@ -63,18 +73,18 @@ const ProfileScreen = ({navigation, route}) => {
       </View>
       <View style = {styles.userInfoSection}>
         <View style = {styles.row} >
-        <Icon name="map-marker-radius" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>Saigon,VN</Text>
+        <Icon name="map-marker-radius" color = {COLORS.black} size={20}/>
+          <Text style={{marginLeft: 20}}>{data.address}</Text>
         </View>
 
         <View style = {styles.row} >
-        <Icon name="phone" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>09944123</Text>
+        <Icon name="phone" color = {COLORS.black} size={20}/>
+          <Text style={{color : COLORS.black, marginLeft: 20}}>{data.phone}</Text>
         </View>
 
         <View style = {styles.row} >
-        <Icon name="email" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>@gmail.com</Text>
+        <Icon name="email" color = {COLORS.black} size={20}/>
+          <Text style={{color : COLORS.black, marginLeft: 20}}>{data.email}</Text>
         </View>
       </View>
 
@@ -83,37 +93,37 @@ const ProfileScreen = ({navigation, route}) => {
             borderRightColor: '#dddddd',
             borderRightWidth: 1
           }]}>
-            <Title><FontAwesome name="bitcoin" size = {20}/>140.50</Title>
+            <Title><FontAwesome name="dollar" size = {20}/>{data.donate}</Title>
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>12</Title>
-            <Caption>Items</Caption>
+            <Title>{data.numsBud}</Title>
+            <Caption>Buddies</Caption>
           </View>
       </View>
 
       <View style={styles.menuWrapper}>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#b51da6" size={25}/>
+            <Icon name="credit-card" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Payment</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress = {shareApp}>
           <View style={styles.menuItem}>
-            <Icon name="share-outline" color="#b51da6" size={25}/>
+            <Icon name="share-outline" color = {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Share Friends</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#b51da6" size={25}/>
+            <Icon name="account-check-outline" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Support</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Feather name="settings" color="#b51da6" size={25}/>
+            <Feather name="settings" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableRipple>
@@ -176,7 +186,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   menuItemText: {
-    color: '#777777',
+    color: COLORS.black,
     marginLeft: 20,
     fontWeight: '600',
     fontSize: 16,

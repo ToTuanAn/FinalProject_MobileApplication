@@ -73,7 +73,7 @@ const SignInScreen = ({navigation}) => {
     <View style={style.container}>
       <StatusBar backgroundColor={COLORS.violet} barStyle="light-content" />
       <View style={style.header}>
-        <Text style={style.text_header}>Welcome To NFT Market Place</Text>
+        <Text style={style.text_header}>Welcome To Saigon Petadoption</Text>
       </View>
 
       <Animatable.View
@@ -159,6 +159,7 @@ const style = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 50,
+    backgroundColor : COLORS.violet,
   },
   footer: {
     flex: 3,

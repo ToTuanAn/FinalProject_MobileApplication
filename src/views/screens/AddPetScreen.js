@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,7 +21,7 @@ import {useForm, Controller} from 'react-hook-form';
 import { ScrollView } from 'react-native-gesture-handler';
 const AddPetScreen = ({navigation, route}) => {
 
-  const [image,setImage] = useState('https://dogoquangthich.com/wp-content/uploads/woocommerce-placeholder-800x800.png')
+  const [image,setImage] = useState('http://baxterpainting.com/wp-content/uploads/2015/11/dog-placeholder.jpg')
 
   
   const [genderOpen, setGenderOpen] = useState(false);
@@ -52,7 +53,10 @@ const AddPetScreen = ({navigation, route}) => {
   const onSubmit = (data) => {
     //data.append("image",image.path)
     data["image"] = image;
+    // do some api here
     console.log(data, "data");
+    Alert.alert("Add succesfully")
+    navigation.goBack();
   };
  
 
@@ -60,7 +64,7 @@ const AddPetScreen = ({navigation, route}) => {
 const openGalery = () =>{
     ImagePicker.openPicker({
       width: 300,
-      height: 200,
+      height: 220,
       cropping: true
     }).then(image => {
       console.log(image);
@@ -72,7 +76,7 @@ const openGalery = () =>{
     <ScrollView contentInsetAdjustmentBehavior="automatic">
     <SafeAreaView style={styles.container}>
     <View style={styles.headerContainer}>
-      <TouchableOpacity style={styles.backArrow}>
+      <TouchableOpacity style={styles.backArrow} onPress = {() => { navigation.goBack()}}>
         <Icon name="arrow-left" size={30} />
       </TouchableOpacity>
       <View style={styles.title}>
@@ -226,7 +230,7 @@ const openGalery = () =>{
                     source={{
                         uri : image
                     }}
-                    style ={{height : 200 , width : 300}}
+                    style ={{height : 220 , width : 300}}
                     imageStyle = {{borderRadius:15}}
                     >
                       <View style = {{
@@ -255,7 +259,7 @@ const openGalery = () =>{
    
     
 
-      <TouchableOpacity style = {{marginBottom : 20,backgroundColor: COLORS.violet}} onPress={handleSubmit(onSubmit)}>
+      <TouchableOpacity style = {{marginBottom : 20}} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.getStarted}>Done</Text>
       </TouchableOpacity>
 
@@ -291,6 +295,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 7,
     marginStart: 10,
+    fontWeight: 'bold',
   },
   placeholderStyles: {
     color: "grey",
@@ -309,7 +314,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   getStarted: {
-    backgroundColor: "#5188E3",
+    backgroundColor: COLORS.violet,
     color: "white",
     textAlign: "center",
     marginHorizontal: 60,
