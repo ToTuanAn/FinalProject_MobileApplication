@@ -20,8 +20,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
 //import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SelectDropdown from 'react-native-select-dropdown';
+import SelectDropdown from 'react-native-select-dropdown'
 import DropDownPicker from 'react-native-dropdown-picker';
+
 const AddPetScreen = ({navigation, route}) => {
 
   const [image,setImage] = useState('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/273798571_3047592772150453_1171043902568185126_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=tGeuSYDaILsAX-cvxJB&tn=rjuYXE7PEOaN48pk&_nc_ht=scontent.fsgn8-3.fna&oh=00_AT-R7h61g_Op9tMJEn7ta6bkKY_35WHhEt8k-N0R5CmowQ&oe=630B86F0')
@@ -35,7 +36,7 @@ const AddPetScreen = ({navigation, route}) => {
   const petType = ["Egypt", "Canada", "Australia", "Ireland"]
 
 
-const openGalery = () =>{
+  const openGalery = () =>{
     ImagePicker.openPicker({
       width: 300,
       height: 200,
@@ -44,7 +45,7 @@ const openGalery = () =>{
       console.log(image);
       setImage(image.path);
     });
-}
+  }
   
   return (
     <SafeAreaView style = {styles.container}>

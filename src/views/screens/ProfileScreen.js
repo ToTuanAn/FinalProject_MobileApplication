@@ -13,9 +13,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 import COLORS from '../../const/colors';
 
-
-
-
 const ProfileScreen = ({navigation, route}) => {
 
   const shareApp = async() =>{

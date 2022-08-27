@@ -1,37 +1,24 @@
-import React, {PropsWithChildren} from 'react';
+import React from 'react';
 import {
-  Image,
   View,
   Text,
   StatusBar,
-  TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Dimensions,
-  Button,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {SafeAreaView} from 'react-native-safe-area-context';
 import COLORS from '../../const/colors';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-import HomeScreen from './HomeScreen';
-
-//import SignInScreen from './SignInScreen';
+import {GradientButton} from '../../components';
 
 export const AuthenticationScreen = ({navigation}) => {
   return (
     <>
-      {/* <Text>Authentication Screen</Text>
-      <Text>{title}</Text>
-      {children} */}
-      
       <View style={style.container}>
       <StatusBar backgroundColor={COLORS.violet} barStyle="light-content"/>
         <View style = {style.header}>
           <Animatable.Image
-              animation="pulse"
-              
+            animation="pulse"
             source={require('../../assets/eth.png')}
             style ={{width: 300, height: 300, borderRadius: 400/ 2}}
             resizeMode="stretch"
@@ -44,34 +31,28 @@ export const AuthenticationScreen = ({navigation}) => {
             }]}
             animation="fadeInUpBig"
         >
-            <Text style={[style.title, {
-                color: COLORS.black
-            }]}>Collecting Best</Text>
-            <Text style={[style.title, {
-                color: COLORS.black
-            }]}>NFT Cryto Art</Text>
-            <View style={style.button}>
-            <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
-                <LinearGradient
-                    colors={['#9F21FD','#01ab9d']}
-                    style={style.start}
-                > 
-                    <Text style={style.textSign}>Start</Text>
-                    <MaterialIcons 
-                        name="arrow-right"
-                        color="#fff"
-                        size={20}
-                    />
-      
-                   
-                </LinearGradient>
-            </TouchableOpacity>
-            </View>
+          <Text style={[style.title, {
+              color: COLORS.black
+          }]}>Collecting Best</Text>
+          <Text style={[style.title, {
+              color: COLORS.black
+          }]}>NFT Cryto Art</Text>
+          <View style={style.button}>
+            <GradientButton 
+              style={style.start} 
+              onPress={() => navigation.navigate('SignInScreen')}>
+              <Text style={style.textSign}>Start</Text>
+              <MaterialIcons 
+                  name="arrow-right"
+                  color="#fff"
+                  fontWeight="bold"
+                  size={20}
+              />
+            </GradientButton>
+          </View>
         </Animatable.View>
       </View>
     </>
-
-    
   );
 };
 
@@ -127,27 +108,29 @@ const style = StyleSheet.create({
   logo: {
     width: height_logo,
     height: height_logo
-},
-text: {
-  color: 'grey',
-  marginTop:5
-},
-button: {
-  alignItems: 'flex-end',
-  marginTop: 30
-},
-start: {
-  width: 180,
-  height: 50,
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: 50,
-  flexDirection: 'row'
-},
-textSign: {
-  color: 'white',
-  fontWeight: 'bold'
-}
+  },
+  text: {
+    color: 'grey',
+    marginTop:5
+  },
+  button: {
+    alignItems: 'flex-end',
+    marginTop: 30
+  },
+  start: {
+    width: 180,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+    flexDirection: 'row'
+  },
+  textSign: {
+    color: 'white',
+    fontWeight: "bold",
+    fontSize: 20,
+    marginRight: 10 
+  }
 });
 
 export default AuthenticationScreen;

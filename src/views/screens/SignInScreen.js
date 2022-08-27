@@ -6,17 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
+  StatusBar
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
-import {Platform} from 'react-native';
-import {StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {IdType} from 'near-api-js/lib/providers/provider';
-import {auth, db} from '../../../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { GradientButton } from '../../components';
 
 const SignInScreen = ({navigation}) => {
   const [data, setData] = React.useState({
@@ -57,15 +55,21 @@ const SignInScreen = ({navigation}) => {
 
   const handleSignIn = (navigation) => {
     return async dispatch => {
-      await signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
+      if (data.email == "" || data.password == "") {
         if (Platform.OS === 'android') {
-          ToastAndroid.show('Log in successfully', ToastAndroid.SHORT)
+          ToastAndroid.show('Please input user name and password first', ToastAndroid.SHORT)
         }
-        navigation.navigate('HomeScreen')
-      })
-      .catch(error => alert(error.message))
+        return
+      }
+      await signInWithEmailAndPassword(auth, data.email, data.password)
+        .then(userCredentials => {
+          const user = userCredentials.user;
+          if (Platform.OS === 'android') {
+            ToastAndroid.show('Log in successfully', ToastAndroid.SHORT)
+          }
+          navigation.navigate('HomeScreen')
+        })
+        .catch(error => alert(error.message))
     }
   }
 
@@ -115,33 +119,25 @@ const SignInScreen = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-            <TouchableOpacity onPress={handleSignIn(navigation)}>
-            <View style={style.button} >
-                <LinearGradient
-                    colors={['#9F21FD','#01ab9d']}
-                    style={style.signIn}
-                > 
-                    <Text style={[style.textSign,{color:'#fff'}]}>Sign In</Text>
-                   
-                   
-                </LinearGradient>
+        <View style={style.button} >
+          <GradientButton style={style.signIn} onPress={handleSignIn(navigation)}>
+            <Text style={[style.textSign,{color:'#fff'}]}>Sign In</Text>
+          </GradientButton>
         </View>
-            </TouchableOpacity>
-        
-        <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}
-        style={[style.signIn,{
-            borderColor:"#009387",
-            borderWidth:1,
-            marginTop:15
-        }]}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("SignUpScreen")}
+          style={[style.signIn, {
+              borderColor:"#009387",
+              borderWidth:1,
+              marginTop:15
+          }]}
         >
-
-        <Text style={[style.textSign,{
-            color : '#009387'
-        }]}>Sign up</Text>
+          <Text style={[style.textSign,{
+              color : '#009387'
+          }]}>
+            Sign up
+          </Text>
         </TouchableOpacity>
-
-
       </Animatable.View>
     </View>
   );
@@ -161,7 +157,6 @@ const style = StyleSheet.create({
     paddingBottom: 50,
   },
   footer: {
-    flex: 3,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -169,7 +164,7 @@ const style = StyleSheet.create({
     paddingVertical: 30,
   },
   text_header: {
-    color: '#fff',
+    color: '#A6A6A6',
     fontWeight: 'bold',
     fontSize: 30,
   },
@@ -183,6 +178,7 @@ const style = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
+    marginBottom: 15
   },
   actionError: {
     flexDirection: 'row',
@@ -196,6 +192,7 @@ const style = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 15,
     color: '#05375a',
+    paddingBottom: 0,
   },
   errorMsg: {
     color: '#FF0000',
@@ -203,7 +200,7 @@ const style = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 20,
   },
   signIn: {
     width: '100%',
