@@ -15,8 +15,10 @@ import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import pets from '../../const/pets';
 const {height} = Dimensions.get('window');
-import {ref, set, get, update, remove, child} from "firbase/database"
-import {db}  from '../../../firebase'
+import { onAuthStateChanged } from "firebase/auth";
+import {db, auth}  from '../../../firebase'
+import { collection, addDoc, getDoc, doc } from "firebase/firestore"; 
+import { userData } from '../converters/User';
 
 const petCategories = [
   {name: 'CATS', icon: 'cat'},
@@ -90,6 +92,7 @@ const HomeScreen = ({navigation}) => {
     fliterPet(0);
   }, []);
 
+  //console.log(userData)
   return (
     <SafeAreaView style={{flex: 1, color: COLORS.white}}>
       <View style={style.header}>

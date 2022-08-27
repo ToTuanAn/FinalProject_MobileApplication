@@ -45,15 +45,14 @@ const SignUpScreen = ({navigation}) => {
             name: data.name,
             email: data.email,
             password: data.password,
+            imageurl: ''
           };
-          //console.log(db);
-          //console.log(userData);
           
           const newUserRef = collection(db, "users");
           const newUser = doc(newUserRef, userCredentials.user.uid);
-          //console.log(newUser.key.path.segments);
+          
           setDoc(newUser, userData);
-          //db.collection('users').doc(userCredentials).set(userData);
+          
       }).then( ()=> {
         if (Platform.OS === 'android') {
           ToastAndroid.show('Sign up successfully', ToastAndroid.SHORT)
