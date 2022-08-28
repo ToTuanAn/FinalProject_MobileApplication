@@ -20,7 +20,7 @@ const DetailsScreen = ({navigation, route}) => {
       <View style={{height: 400, backgroundColor: COLORS.background}}>
         <ImageBackground
           resizeMode="contain"
-          source={pet?.image}
+          source={{uri: pet?.imageurl}}
           style={{
             height: 280,
             top: 20,
@@ -55,14 +55,14 @@ const DetailsScreen = ({navigation, route}) => {
               marginTop: 5,
             }}>
             <Text style={{fontSize: 12, color: COLORS.dark}}>{pet.type}</Text>
-            <Text style={{fontSize: 13, color: COLORS.dark}}>{pet.age}</Text>
+            <Text style={{fontSize: 13, color: COLORS.dark}}>{pet.age} years old</Text>
           </View>
 
           {/* Render location and icon */}
           <View style={{marginTop: 5, flexDirection: 'row'}}>
             <Icon name="map-marker" color={COLORS.primary} size={20} />
             <Text style={{fontSize: 14, color: COLORS.grey, marginLeft: 5}}>
-              5 Bulvarna-Kudriavska Street, Kyiv
+              {pet?.useraddress}
             </Text>
           </View>
         </View>
@@ -74,13 +74,13 @@ const DetailsScreen = ({navigation, route}) => {
           {/* Render user image , name and date */}
           <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
             <Image
-              source={require('../../assets/person.jpg')}
+              source={{uri: pet?.userimageurl}}
               style={{height: 40, width: 40, borderRadius: 20}}
             />
             <View style={{flex: 1, paddingLeft: 10}}>
               <Text
                 style={{color: COLORS.dark, fontSize: 12, fontWeight: 'bold'}}>
-                JANE GARY
+                {pet?.username}
               </Text>
               <Text
                 style={{
@@ -95,9 +95,7 @@ const DetailsScreen = ({navigation, route}) => {
             <Text style={{color: COLORS.grey, fontSize: 12}}>May 25, 2020</Text>
           </View>
           <Text style={style.comment}>
-            My job requires moving to another country. I don't have the
-            opputurnity to take the cat with me. I am looking for good people
-            who will shelter my Lily.
+            {pet?.description}
           </Text>
         </View>
 
@@ -106,7 +104,7 @@ const DetailsScreen = ({navigation, route}) => {
           <TouchableOpacity style={style.iconCon}>
             <Icon name="heart-outline" size={22} color={COLORS.white} />
           </TouchableOpacity>
-          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner')}>
+          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner',pet)}>
 
             <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
               ADOPTION

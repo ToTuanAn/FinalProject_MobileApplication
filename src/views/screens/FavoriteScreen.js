@@ -94,7 +94,7 @@ const FavoriteScreen = ({navigation,route}) => {
   return (
     <SafeAreaView style = {styles.container}>
     <View style={styles.headerContainer}>
-      <TouchableOpacity style={styles.backArrow} onPress = {() => navigation.navigate("HomeScreen")}>
+      <TouchableOpacity style={styles.backArrow} onPress = {() => navigation.goBack("HomeScreen")}>
         <Icon name="arrow-left" size={30} />
       </TouchableOpacity>
       <View style={styles.title}>
