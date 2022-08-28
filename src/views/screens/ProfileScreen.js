@@ -18,24 +18,22 @@ import { userConverter } from '../converters/User';
 import { onAuthStateChanged } from "firebase/auth";
 
 
-
 const ProfileScreen = ({navigation, route}) => {
 
   const [userData, setUserData] = useState(null);
   //const [loading, setLoading] = useState(true);
-
+ 
   const getUser = async() => {
     await onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        //setData() 
         getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
           if (docSnap.exists()) {
             
             setUserData(docSnap.data());
             //console.log(userData)
             
-            return docSnap.data();
+            //return docSnap.data();
           } else {
             console.log("No such document!");
           }
@@ -124,8 +122,8 @@ const ProfileScreen = ({navigation, route}) => {
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>{userData ? userData.item : '0'}</Title>
-            <Caption>Items</Caption>
+            <Title>{userData ? userData.item : 0}</Title>
+            <Caption>Pets</Caption>
 
           </View>
       </View>

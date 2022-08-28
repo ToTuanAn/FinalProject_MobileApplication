@@ -1,5 +1,8 @@
 import React,{useState, useEffect} from 'react';
 import {
+  Avatar,
+} from 'react-native-paper';
+import {
   createDrawerNavigator,
   useDrawerProgress,
   DrawerContentScrollView,
@@ -22,11 +25,11 @@ const Drawer = createDrawerNavigator();
 const DrawerScreenContainer = ({children}) => {
   const isDrawerOpen = useDrawerStatus();
   const progress = useDrawerProgress();
-  const scale = Animated.interpolate(progress, {
+  const scale = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [1, 0.8],
   });
-  const borderRadius = Animated.interpolate(progress, {
+  const borderRadius = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [0, 25],
   });
@@ -88,10 +91,10 @@ const CustomDrawerContent = props => {
           marginLeft: 20,
           marginVertical: 40,
         }}>
-        <Image
-          source={userData ? userData.imageurl || 'No details added.' : ''}
-          style={{height: 70, width: 70, borderRadius: 20}}
-        />
+        <Avatar.Image source={{
+            uri : userData ? userData.imageurl || 'No details added.' : ''
+          }}
+          size={80}/>
         <Text
           style={{
             color: COLORS.white,

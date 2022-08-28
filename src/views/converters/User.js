@@ -29,7 +29,7 @@ toFirestore: (user) => {
 },
 fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
-    return new User(data.name, data.email, data.imageurl, data.phonenum, data.country, data.money, data.items, data.favoritepets);
+    return new User(data.name, data.email, data.imageurl, data.phonenum, data.country, data.money, data.item, data.favoritepets);
 }
 };
 

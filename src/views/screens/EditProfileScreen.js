@@ -1,6 +1,7 @@
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
+  Avatar,
   View,
   Text,
   TouchableOpacity,
@@ -16,34 +17,76 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
+import {db, auth}  from '../../../firebase'
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; 
+import { onAuthStateChanged } from "firebase/auth";
+import { userConverter } from '../converters/User';
 
 
 
 const EditProfileScreen = ({navigation, route}) => {
   const [image,setImage] = useState('https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1214428300?k=20&m=1214428300&s=612x612&w=0&h=MOvSM2M1l_beQ4UzfSU2pfv4sRjm0zkpeBtIV-P71JE=')
+  const [userData, setUserData] = useState(null);
 
+  const openGalery = () =>{
+      ImagePicker.openPicker({
+        width: 150,
+        height: 150,
+        cropping: true
+      }).then(image => {
+        console.log(image);
+        setImage(image.path);
+      });
+  }
 
-const openGalery = () =>{
-    ImagePicker.openPicker({
-      width: 150,
-      height: 150,
-      cropping: true
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
+  const { handleSubmit, control } = useForm();
+
+  const getUser = async() => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          } else {
+            console.log("No such document!");
+          }
+        })
+      }
     });
-}
+  }
 
-const { handleSubmit, control } = useForm();
+  const changeUserInfo = async(data) => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        
+        const userDocRef = doc(db, "users", uid);
+        updateDoc(userDocRef, {
+            "name": data.lastName + " " + data.firstName,
+            "phonenum": data.phone,
+            "country": data.address,
+            "imageurl": data.image
+          });
+        }
+        //console.log("haha")
+    });
+  }
 
-const onSubmit = (data) => {
-  //data.append("image",image.path)
-  data["image"] = image;
-  // do some api here
-  console.log(data, "data");
-  Alert.alert("Update succesfully")
-  navigation.goBack();
-};
+  useEffect(() => {
+    getUser();
+  });
+
+  const onSubmit = (data) => {
+    //data.append("image",image.path)
+    
+    data["image"] = image;
+    // do some api here
+    changeUserInfo(data);
+    console.log(data, "data");
+    Alert.alert("Update succesfully")
+    navigation.goBack();
+  };
   
   return (
     <View style = {styles.container}>
@@ -91,19 +134,20 @@ const onSubmit = (data) => {
             </TouchableOpacity>
 
             <Text style ={{
-              marginTop : 40,
+              marginTop : 20,
               fontSize : 18,
               fontWeight : 'bold',
             }}>
-              User name
+              {userData ? userData.name || 'No details added.' : ''}
               </Text>
 
               <Text style ={{
-              marginTop : 10,
+              marginTop : 2,
               fontSize : 18,
               fontWeight : 'bold',
+              marginBottom: 10,
             }}>
-              Email
+              {userData ? userData.email || 'No details added.' : ''}
               </Text>
 
               <View style = {styles.action}>
