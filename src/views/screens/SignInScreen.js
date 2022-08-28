@@ -14,6 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import {db, auth}  from '../../../firebase'
 import { GradientButton } from '../../components';
 
 const SignInScreen = ({navigation}) => {

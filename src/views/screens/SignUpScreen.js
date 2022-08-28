@@ -45,8 +45,9 @@ const SignUpScreen = ({navigation}) => {
             imageurl: '',
             phonenum: '',
             country: '',
-            money: '0',
-            item: '0'
+            money: 0,
+            item: 0,
+            favoritepets: []
           };
           
           const newUserRef = collection(db, "users");

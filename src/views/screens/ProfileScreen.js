@@ -64,15 +64,6 @@ const ProfileScreen = ({navigation, route}) => {
   });
 
   }
-  const [data,setData] = React.useState({
-    userName : 'User Name',
-    email : 'your@email.com',
-    numsBud: 0,
-    donate : 0,
-    fullName :' your name',
-    address : 'your address',
-    phone : 'phone No',
-  });
 
   return (
     <SafeAreaView style={styles.container} >
