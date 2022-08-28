@@ -22,11 +22,11 @@ const Drawer = createDrawerNavigator();
 const DrawerScreenContainer = ({children}) => {
   const isDrawerOpen = useDrawerStatus();
   const progress = useDrawerProgress();
-  const scale = Animated.interpolateNode(progress, {
+  const scale = Animated.interpolate(progress, {
     inputRange: [0, 1],
     outputRange: [1, 0.8],
   });
-  const borderRadius = Animated.interpolateNode(progress, {
+  const borderRadius = Animated.interpolate(progress, {
     inputRange: [0, 1],
     outputRange: [0, 25],
   });
