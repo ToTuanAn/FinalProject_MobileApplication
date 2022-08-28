@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import {
   createDrawerNavigator,
   useDrawerProgress,
@@ -13,6 +13,10 @@ import ProfileScreen from '../screens/ProfileScreen';
 import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddPetScreen from '../screens/AddPetScreen';
+import { collection, addDoc, getDoc, doc } from "firebase/firestore"; 
+import {db, auth}  from '../../../firebase'
+import { userConverter } from '../converters/User';
+import { onAuthStateChanged } from "firebase/auth";
 const Drawer = createDrawerNavigator();
 
 const DrawerScreenContainer = ({children}) => {
@@ -46,6 +50,34 @@ const DrawerScreenContainer = ({children}) => {
 };
 
 const CustomDrawerContent = props => {
+  const [userData, setUserData] = useState(null);
+  //const [loading, setLoading] = useState(true);
+
+  const getUser = async() => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        //setData() 
+        getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            
+            setUserData(docSnap.data());
+            
+            return docSnap.data();
+          } else {
+            console.log("No such document!");
+          }
+        })
+      }
+    });
+  }
+
+  useEffect(() => {
+    getUser();
+    //fetchPosts();
+    
+  });
+
   return (
     <DrawerContentScrollView
       style={{
@@ -57,7 +89,7 @@ const CustomDrawerContent = props => {
           marginVertical: 40,
         }}>
         <Image
-          source={require('../../assets/person.jpg')}
+          source={userData ? userData.imageurl || 'No details added.' : ''}
           style={{height: 70, width: 70, borderRadius: 20}}
         />
         <Text
@@ -67,7 +99,7 @@ const CustomDrawerContent = props => {
             fontSize: 13,
             marginTop: 10,
           }}>
-          JANE GARY
+           {userData ? userData.name || 'No details added.' : ''}
         </Text>
       </View>
 

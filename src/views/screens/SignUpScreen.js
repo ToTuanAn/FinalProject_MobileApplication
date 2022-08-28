@@ -42,7 +42,11 @@ const SignUpScreen = ({navigation}) => {
             name: data.name,
             email: data.email,
             password: data.password,
-            imageurl: ''
+            imageurl: '',
+            phonenum: '',
+            country: '',
+            money: '0',
+            item: '0'
           };
           
           const newUserRef = collection(db, "users");

@@ -49,9 +49,11 @@ const onSubmit = (data) => {
     <View style = {styles.container}>
        <View style={styles.toggle}>
         <Icon name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
+
         <Text style={{color: COLORS.violet, fontWeight: 'bold', fontSize: 16}}>
           Edit your information
         </Text>
+
       </View>
       
       <View style={{margin: 20}}>
