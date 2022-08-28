@@ -6,11 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
+  StatusBar,  
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
-import {Platform} from 'react-native';
-import {StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,7 +19,7 @@ import {auth, db} from '../../../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { GradientButton } from '../../components';
 
 const SignUpScreen = ({navigation}) => {
   const [data, setData] = React.useState({
@@ -33,10 +33,7 @@ const SignUpScreen = ({navigation}) => {
     confirm_securedPassword: true
   });
 
-
-  //console.log(db)
   const handleSignUp = (navigation) => {
-    
     return async dispatch => {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(userCredentials => {
@@ -98,6 +95,7 @@ const SignUpScreen = ({navigation}) => {
       });
     }
   };
+
   const inputPassword = (val) => {
     setData({
       ...data,
@@ -193,11 +191,11 @@ const SignUpScreen = ({navigation}) => {
         <Text style={style.text_footer}>Confirm password</Text>
         <View style={style.action}>
           <FontAwesome name="lock" color="#05375A" size={20} />
-          <TextInput
-            placeholder="Your password"
-            style={style.textInput}
-            autoCapitalize="none"
-            secureTextEntry={data.confirm_securedPassword ? true : false}
+            <TextInput
+              placeholder="Your password"
+              style={style.textInput}
+              autoCapitalize="none"
+              secureTextEntry={data.confirm_securedPassword ? true : false}
             onChangeText={val => inputConfirmPassword(val)}
           />
 
@@ -209,19 +207,15 @@ const SignUpScreen = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={style.button} onPress={handleSignUp(navigation)}>
-        <LinearGradient colors={['#9F21FD','#01ab9d']} style={style.signIn}> 
+        <GradientButton style={[style.button, style.signIn]} onPress={handleSignUp(navigation)}>
           <Text style={[style.textSign,{color:'#fff'}]}>Register</Text>
-        </LinearGradient>
-        </TouchableOpacity>
-
+        </GradientButton>
         <TouchableOpacity onPress={() => navigation.goBack()}
-        style={[style.signIn,{
-            borderColor:"#009387",
-            borderWidth:1,
-            marginTop:15
-        }]}
+          style={[style.signIn,{
+              borderColor:"#009387",
+              borderWidth:1,
+              marginTop:15
+          }]}
         >
         <Text style={[style.textSign,{
             color : '#009387'
@@ -248,7 +242,6 @@ const style = StyleSheet.create({
     paddingBottom: 50,
   },
   footer: {
-    flex: 3,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -256,7 +249,7 @@ const style = StyleSheet.create({
     paddingVertical: 30,
   },
   text_header: {
-    color: '#fff',
+    color: '#A6A6A6',
     fontWeight: 'bold',
     fontSize: 30,
   },
@@ -270,6 +263,7 @@ const style = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
+    marginBottom: 10,
   },
   actionError: {
     flexDirection: 'row',
@@ -282,6 +276,7 @@ const style = StyleSheet.create({
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 15,
+    paddingBottom: 0,
     color: '#05375a',
   },
   errorMsg: {
@@ -290,7 +285,7 @@ const style = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 20,
   },
   signIn: {
     width: '100%',

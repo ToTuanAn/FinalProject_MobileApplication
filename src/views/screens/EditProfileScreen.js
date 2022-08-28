@@ -6,42 +6,54 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  Alert,
 } from 'react-native';
 import { Platform } from 'react-native';
+import {useForm, Controller} from 'react-hook-form';
 
-import {useTheme} from 'react-native-paper';
-import { useMemo } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
-import SelectDropdown from 'react-native-select-dropdown'
+
 
 
 const EditProfileScreen = ({navigation, route}) => {
-  const petType = ["Egypt", "Canada", "Australia", "Ireland"]
-
-  const [image,setImage] = useState('https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/273798571_3047592772150453_1171043902568185126_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=tGeuSYDaILsAX-cvxJB&tn=rjuYXE7PEOaN48pk&_nc_ht=scontent.fsgn8-3.fna&oh=00_AT-R7h61g_Op9tMJEn7ta6bkKY_35WHhEt8k-N0R5CmowQ&oe=630B86F0')
+  const [image,setImage] = useState('https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1214428300?k=20&m=1214428300&s=612x612&w=0&h=MOvSM2M1l_beQ4UzfSU2pfv4sRjm0zkpeBtIV-P71JE=')
 
 
 const openGalery = () =>{
     ImagePicker.openPicker({
-      width: 300,
-      height: 400,
+      width: 150,
+      height: 150,
       cropping: true
     }).then(image => {
       console.log(image);
       setImage(image.path);
     });
 }
+
+const { handleSubmit, control } = useForm();
+
+const onSubmit = (data) => {
+  //data.append("image",image.path)
+  data["image"] = image;
+  // do some api here
+  console.log(data, "data");
+  Alert.alert("Update succesfully")
+  navigation.goBack();
+};
   
   return (
     <View style = {styles.container}>
        <View style={styles.toggle}>
         <Icon name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
+
+        <Text style={{color: COLORS.violet, fontWeight: 'bold', fontSize: 16}}>
+          Edit your information
+        </Text>
+
       </View>
       
       <View style={{margin: 20}}>
@@ -53,7 +65,7 @@ const openGalery = () =>{
                     source={{
                         uri : image
                     }}
-                    style ={{height : 100 , width : 100}}
+                    style ={{height : 150 , width : 150}}
                     imageStyle = {{borderRadius:15}}
                     >
                       <View style = {{
@@ -79,7 +91,7 @@ const openGalery = () =>{
             </TouchableOpacity>
 
             <Text style ={{
-              marginTop : 10,
+              marginTop : 40,
               fontSize : 18,
               fontWeight : 'bold',
             }}>
@@ -96,47 +108,83 @@ const openGalery = () =>{
 
               <View style = {styles.action}>
                 <FontAwesome name ="user-o" size = {20}/>
-                <TextInput
-                  placeholder='First name'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
+                <Controller
+                        name="firstName"
+                        defaultValue=""
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                            placeholder='First name'
+                            autoCorrect = {false}
+                            placeholderTextColor="#666666"
+                            style = {styles.textInput}
+                            onChangeText={onChange}
+                            value={value}
+                         />
+                        )}
+                      />
               </View>
 
               <View style = {styles.action}>
                 <Icon name ="rename-box" size = {20}/>
-                <TextInput
-                  placeholder='Last name'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
-              </View>
+                <Controller
+                        name="lastName"
+                        defaultValue=""
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                            placeholder='Last name'
+                            autoCorrect = {false}
+                            placeholderTextColor="#666666"
+                            style = {styles.textInput}
+                            onChangeText={onChange}
+                            value={value}/>
+                        )}                     
+                  />
+                 </View>
 
 
               <View style = {styles.action}>
                 <FontAwesome name ="phone" size = {20}/>
-                <TextInput
-                  placeholder='Phone'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
+                <Controller
+                        name="phone"
+                        defaultValue=""
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                                placeholder='Phone'
+                                autoCorrect = {false}
+                                placeholderTextColor="#666666"
+                                style = {styles.textInput}
+                                onChangeText={onChange}
+                                value={value}/>                              
+                        )}
+                      />
+                
               </View>
 
               <View style = {styles.action}>
-                <FontAwesome name ="globe" size = {20}/>
-                <TextInput
-                  placeholder='Country'
-                  autoCorrect = {false}
-                  placeholderTextColor="#666666"
-                  style = {styles.textInput}
-                />
+                <FontAwesome name ="home" size = {20}/>
+                <Controller
+                        name="address"
+                        defaultValue=""
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                          <TextInput
+                              placeholder='Address'
+                              autoCorrect = {false}
+                              placeholderTextColor="#666666"
+                              style = {styles.textInput}
+                              onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
+                      />
+          
               </View>
         </View>
             
-        <TouchableOpacity style = {styles.commandButton}>
+        <TouchableOpacity style = {styles.commandButton} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.panelButtonTitle}>Submit</Text>  
         </TouchableOpacity>
 

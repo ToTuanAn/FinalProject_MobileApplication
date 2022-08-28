@@ -18,6 +18,7 @@ import { userConverter } from '../converters/User';
 import { onAuthStateChanged } from "firebase/auth";
 
 
+
 const ProfileScreen = ({navigation, route}) => {
 
   const [userData, setUserData] = useState(null);
@@ -49,6 +50,7 @@ const ProfileScreen = ({navigation, route}) => {
     
   });
 
+
   const shareApp = async() =>{
     const options = {
       message : 'he',
@@ -62,6 +64,15 @@ const ProfileScreen = ({navigation, route}) => {
   });
 
   }
+  const [data,setData] = React.useState({
+    userName : 'User Name',
+    email : 'your@email.com',
+    numsBud: 0,
+    donate : 0,
+    fullName :' your name',
+    address : 'your address',
+    phone : 'phone No',
+  });
 
   return (
     <SafeAreaView style={styles.container} >
@@ -84,8 +95,9 @@ const ProfileScreen = ({navigation, route}) => {
             }]}>{userData ? userData.name || 'No details added.' : ''}</Title>
             <Caption style={styles.caption}>{userData ? userData.email || 'No details added.' : ''}</Caption>
           </View>
+
           <TouchableOpacity 
-          style={{marginLeft: 30 , marginTop:30}}
+          style={{marginStart : 20, marginTop:30}}
           onPress = {() => navigation.navigate('EditProfileScreen')}
           >
             <Icon name = "account-edit" size = {30} />
@@ -94,6 +106,7 @@ const ProfileScreen = ({navigation, route}) => {
       </View>
       <View style = {styles.userInfoSection}>
         <View style = {styles.row} >
+
         <Icon name="map-marker-radius" color="#777777" size={20}/>
           <Text style={{color:"#777777", marginLeft: 20}}>{userData ? userData.country || 'No details added.' : ''}</Text>
         </View>
@@ -106,6 +119,7 @@ const ProfileScreen = ({navigation, route}) => {
         <View style = {styles.row} >
         <Icon name="email" color="#777777" size={20}/>
           <Text style={{color:"#777777", marginLeft: 20}}>{userData ? userData.email|| 'No details added.' : ''}</Text>
+
         </View>
       </View>
 
@@ -114,37 +128,39 @@ const ProfileScreen = ({navigation, route}) => {
             borderRightColor: '#dddddd',
             borderRightWidth: 1
           }]}>
+
             <Title><FontAwesome name="bitcoin" size = {20}/>{userData ? userData.money : '0'}</Title>
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
             <Title>{userData ? userData.item : '0'}</Title>
             <Caption>Items</Caption>
+
           </View>
       </View>
 
       <View style={styles.menuWrapper}>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#b51da6" size={25}/>
+            <Icon name="credit-card" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Payment</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress = {shareApp}>
           <View style={styles.menuItem}>
-            <Icon name="share-outline" color="#b51da6" size={25}/>
+            <Icon name="share-outline" color = {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Share Friends</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#b51da6" size={25}/>
+            <Icon name="account-check-outline" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Support</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Feather name="settings" color="#b51da6" size={25}/>
+            <Feather name="settings" color= {COLORS.black} size={25}/>
             <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableRipple>
@@ -207,7 +223,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   menuItemText: {
-    color: '#777777',
+    color: COLORS.black,
     marginLeft: 20,
     fontWeight: '600',
     fontSize: 16,
