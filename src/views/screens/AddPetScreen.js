@@ -289,79 +289,79 @@ const AddPetScreen = ({navigation, route}) => {
 export default AddPetScreen;
 
 const styles = StyleSheet.create({
-    headerContainer: {
-        flexDirection: 'row',
-        marginTop: 10,
-        marginBottom: 25,
-        alignItems: 'center',
-    },
-    container: {
-        flex: 1,
-    },
-    input: {
-        borderStyle: 'solid',
-        borderColor: '#B7B7B7',
-        borderRadius: 7,
-        borderWidth: 1,
-        fontSize: 15,
-        height: 50,
-        marginHorizontal: 10,
-        paddingStart: 10,
-        marginBottom: 15,
-    },
-    label: {
-        marginBottom: 7,
-        marginStart: 10,
-        fontWeight: 'bold',
-    },
-    placeholderStyles: {
-        color: 'grey',
-    },
-    dropdownGender: {
-        marginHorizontal: 10,
-        width: '50%',
-        marginBottom: 15,
-    },
-    dropdownCompany: {
-        marginHorizontal: 10,
-        marginBottom: 15,
-    },
-    dropdown: {
-        borderColor: '#B7B7B7',
-        height: 50,
-    },
-    getStarted: {
-        backgroundColor: COLORS.violet,
-        color: 'white',
-        textAlign: 'center',
-        marginHorizontal: 60,
-        paddingVertical: 15,
-        borderRadius: 50,
-        marginTop: 20,
-    },
-    commandButton: {
-        padding: 15,
-        borderRadius: 10,
-        backgroundColor: COLORS.violet,
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    panelButtonTitle: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: 'white',
-    },
-    backArrow: {
-        marginLeft: 10,
-    },
-    title: {
-        alignSelf: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    titleText: {
-        fontSize: 20,
-        marginRight: 40,
-    },
+  headerContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 25,
+    alignItems:'center',
+  },
+  container: {
+    flex: 1, 
+  },
+  input: {
+    borderStyle: "solid",
+    borderColor: "#B7B7B7",
+    borderRadius: 7,
+    borderWidth: 1,
+    fontSize: 15,
+    height: 50,
+    marginHorizontal: 10,
+    paddingStart: 10,
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 7,
+    marginStart: 10,
+    fontWeight: 'bold',
+  },
+  placeholderStyles: {
+    color: "grey",
+  },
+  dropdownGender: {
+    marginHorizontal: 10,
+    width: "50%",
+    marginBottom: 15,
+  },
+  dropdownCompany: {
+    marginHorizontal: 10,
+    marginBottom: 15,
+  },
+  dropdown: {
+    borderColor: "#B7B7B7",
+    height: 50,
+  },
+  getStarted: {
+    backgroundColor: COLORS.violet,
+    color: "white",
+    textAlign: "center",
+    marginHorizontal: 60,
+    paddingVertical: 15,
+    borderRadius: 50,
+    marginTop: 20,
+  },
+  commandButton: {
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: COLORS.violet,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  backArrow: {
+    marginLeft: 10,
+  },
+  title: {
+    alignSelf: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  titleText: {
+    fontSize: 20,
+    marginRight: 40
+  },
 });

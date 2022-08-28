@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-    Text,
-    ImageBackground,
-    SafeAreaView,
-    StatusBar,
-    View,
-    Image,
-    StyleSheet,
+  Text,
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
@@ -100,72 +101,20 @@ const DetailsScreen = ({navigation, route}) => {
                     </View>
                 </View>
             </View>
+        {/* Render footer */}
+        <View style={style.footer}>
+          <TouchableOpacity style={style.iconCon}>
+            <Icon name="heart-outline" size={22} color={COLORS.white} />
+          </TouchableOpacity>
+          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner')}>
 
-            {/* Comment container */}
-            <View
-                style={{
-                    marginTop: 80,
-                    justifyContent: 'space-between',
-                    flex: 1,
-                }}
-            >
-                <View>
-                    {/* Render user image , name and date */}
-                    <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
-                        <Image
-                            source={require('../../assets/person.jpg')}
-                            style={{height: 40, width: 40, borderRadius: 20}}
-                        />
-                        <View style={{flex: 1, paddingLeft: 10}}>
-                            <Text
-                                style={{
-                                    color: COLORS.dark,
-                                    fontSize: 12,
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                JANE GARY
-                            </Text>
-                            <Text
-                                style={{
-                                    color: COLORS.grey,
-                                    fontSize: 11,
-                                    fontWeight: 'bold',
-                                    marginTop: 2,
-                                }}
-                            >
-                                Owner
-                            </Text>
-                        </View>
-                        <Text style={{color: COLORS.grey, fontSize: 12}}>
-                            May 25, 2020
-                        </Text>
-                    </View>
-                    <Text style={style.comment}>
-                        My job requires moving to another country. I don't have
-                        the opputurnity to take the cat with me. I am looking
-                        for good people who will shelter my Lily.
-                    </Text>
-                </View>
-
-                {/* Render footer */}
-                <View style={style.footer}>
-                    <View style={style.iconCon}>
-                        <Icon
-                            name="heart-outline"
-                            size={22}
-                            color={COLORS.white}
-                        />
-                    </View>
-                    <View style={style.btn}>
-                        <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
-                            ADOPTION
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        </SafeAreaView>
-    );
+            <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
+              ADOPTION
+            </Text>   
+          </TouchableOpacity>
+        </View>
+    </SafeAreaView>
+  );
 };
 
 const style = StyleSheet.create({
