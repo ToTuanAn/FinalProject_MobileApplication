@@ -42,9 +42,6 @@ const openGalery = () =>{
     <View style = {styles.container}>
        <View style={styles.toggle}>
         <Icon name="arrow-left" size={28} onPress={() => {navigation.goBack("ProfileScreen")}} />
-        <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 16}}>
-          JANE GARY
-        </Text>
       </View>
       
       <View style={{margin: 20}}>

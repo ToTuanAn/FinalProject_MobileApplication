@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, PropTypes, Component} from 'react';
 import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   Avatar,
@@ -12,11 +12,42 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 import COLORS from '../../const/colors';
-
-
+import { collection, addDoc, getDoc, doc } from "firebase/firestore"; 
+import {db, auth}  from '../../../firebase'
+import { userConverter } from '../converters/User';
+import { onAuthStateChanged } from "firebase/auth";
 
 
 const ProfileScreen = ({navigation, route}) => {
+
+  const [userData, setUserData] = useState(null);
+  //const [loading, setLoading] = useState(true);
+
+  const getUser = async() => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        //setData() 
+        getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            
+            setUserData(docSnap.data());
+            //console.log(userData)
+            
+            return docSnap.data();
+          } else {
+            console.log("No such document!");
+          }
+        })
+      }
+    });
+  }
+
+  useEffect(() => {
+    getUser();
+    //fetchPosts();
+    
+  });
 
   const shareApp = async() =>{
     const options = {
@@ -37,21 +68,21 @@ const ProfileScreen = ({navigation, route}) => {
       <View style={styles.header}>
         <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
         <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 16}}>
-          JANE GARY
+        {userData ? userData.name || 'No details added.' : ''}
         </Text>
       </View>
       <View style = {styles.userInfoSection}>
         <View style={{flexDirection : 'row', marginTop : 15}}>
           <Avatar.Image source={{
-            uri : 'https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-6/273798571_3047592772150453_1171043902568185126_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=tGeuSYDaILsAX-cvxJB&tn=rjuYXE7PEOaN48pk&_nc_ht=scontent.fsgn8-3.fna&oh=00_AT-R7h61g_Op9tMJEn7ta6bkKY_35WHhEt8k-N0R5CmowQ&oe=630B86F0'
+            uri : userData ? userData.imageurl || 'No details added.' : ''
           }}
           size={80}/>
           <View style={{marginLeft: 20}}>
             <Title style={[styles.title, {
               marginTop:15,
               marginBottom: 5,
-            }]}>Thien Tri Luong</Title>
-            <Caption style={styles.caption}>@t_tri</Caption>
+            }]}>{userData ? userData.name || 'No details added.' : ''}</Title>
+            <Caption style={styles.caption}>{userData ? userData.email || 'No details added.' : ''}</Caption>
           </View>
           <TouchableOpacity 
           style={{marginLeft: 30 , marginTop:30}}
@@ -64,17 +95,17 @@ const ProfileScreen = ({navigation, route}) => {
       <View style = {styles.userInfoSection}>
         <View style = {styles.row} >
         <Icon name="map-marker-radius" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>Saigon,VN</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}>{userData ? userData.country || 'No details added.' : ''}</Text>
         </View>
 
         <View style = {styles.row} >
         <Icon name="phone" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>09944123</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}>{userData ? userData.phonenum || 'No details added.' : ''}</Text>
         </View>
 
         <View style = {styles.row} >
         <Icon name="email" color="#777777" size={20}/>
-          <Text style={{color:"#777777", marginLeft: 20}}>@gmail.com</Text>
+          <Text style={{color:"#777777", marginLeft: 20}}>{userData ? userData.email|| 'No details added.' : ''}</Text>
         </View>
       </View>
 
@@ -83,11 +114,11 @@ const ProfileScreen = ({navigation, route}) => {
             borderRightColor: '#dddddd',
             borderRightWidth: 1
           }]}>
-            <Title><FontAwesome name="bitcoin" size = {20}/>140.50</Title>
+            <Title><FontAwesome name="bitcoin" size = {20}/>{userData ? userData.money : '0'}</Title>
             <Caption>Wallet</Caption>
           </View>
           <View style={styles.infoBox}>
-            <Title>12</Title>
+            <Title>{userData ? userData.item : '0'}</Title>
             <Caption>Items</Caption>
           </View>
       </View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -18,7 +18,7 @@ const {height} = Dimensions.get('window');
 import { onAuthStateChanged } from "firebase/auth";
 import {db, auth}  from '../../../firebase'
 import { collection, addDoc, getDoc, doc } from "firebase/firestore"; 
-import { userData } from '../converters/User';
+import { userConverter } from '../converters/User';
 
 const petCategories = [
   {name: 'CATS', icon: 'cat'},
@@ -80,6 +80,28 @@ const Card = ({pet, navigation}) => {
 const HomeScreen = ({navigation}) => {
   const [selectedCategoryIndex, setSeletedCategoryIndex] = React.useState(0);
   const [filteredPets, setFilteredPets] = React.useState([]);
+  const [userData, setUserData] = useState(null);
+  //const [loading, setLoading] = useState(true);
+
+  const getUser = async() => {
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        //setData() 
+        getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            
+            setUserData(docSnap.data());
+            //console.log(userData)
+            
+            return docSnap.data();
+          } else {
+            console.log("No such document!");
+          }
+        })
+      }
+    });
+  }
 
   const fliterPet = index => {
     const currentPets = pets.filter(
@@ -89,6 +111,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   React.useEffect(() => {
+    getUser();
     fliterPet(0);
   }, []);
 
@@ -98,10 +121,10 @@ const HomeScreen = ({navigation}) => {
       <View style={style.header}>
         <Icon name="sort-variant" size={28} onPress={navigation.toggleDrawer} />
         <Text style={{color: COLORS.primary, fontWeight: 'bold', fontSize: 16}}>
-          JANE GARY
+        {userData ? userData.name || 'No details added.' : ''}
         </Text>
         <Image
-          source={require('../../assets/person.jpg')}
+          source={userData ? userData.imageurl  : ''}
           style={{height: 30, width: 30, borderRadius: 25}}
         />
       </View>
