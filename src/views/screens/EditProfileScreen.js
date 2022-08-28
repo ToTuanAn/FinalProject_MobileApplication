@@ -156,6 +156,7 @@ const onSubmit = (data) => {
                                 autoCorrect = {false}
                                 placeholderTextColor="#666666"
                                 style = {styles.textInput}
+                                keyboardType = 'numeric'
                                 onChangeText={onChange}
                                 value={value}/>                              
                         )}
