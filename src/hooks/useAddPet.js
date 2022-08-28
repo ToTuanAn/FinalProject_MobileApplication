@@ -1,14 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-// import { useQueryClient } from 'react-query';
-// import { PlaceChestInput, ChestService } from '../services/chestService';
-// import Quill from 'quill';
-// import { useToast } from '@chakra-ui/react';
-// import { ModalsController } from '../utils/modalsController';
-// import { CREATE_POST_REDIRECT } from '../constants';
-// import { useRouter } from 'next/router';
-// import { useDispatch } from 'react-redux';
-
-import {useForm, Controller} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 // import {uuid} from 'uuidv4';
 import {db} from '../../firebase';
@@ -41,12 +32,9 @@ export const useAddPet = () => {
         setDoc(newPet, petData).then(()=>{
             setAddPetPublishing(false);
         })
-          
     }
 
     return {
-        // refQuill,
-        // placeChestForm,
         setPetImg,
         addPetPublishing,
         control,
