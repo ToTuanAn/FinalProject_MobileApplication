@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   container: {
-    flex: 1,
+    flex: 1, 
   },
   input: {
     borderStyle: "solid",
@@ -352,5 +352,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginRight: 40
   },
+
 });
 

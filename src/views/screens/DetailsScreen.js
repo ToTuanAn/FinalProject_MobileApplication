@@ -7,6 +7,7 @@ import {
   View,
   Image,
   StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
@@ -102,14 +103,16 @@ const DetailsScreen = ({navigation, route}) => {
 
         {/* Render footer */}
         <View style={style.footer}>
-          <View style={style.iconCon}>
+          <TouchableOpacity style={style.iconCon}>
             <Icon name="heart-outline" size={22} color={COLORS.white} />
-          </View>
-          <View style={style.btn}>
+          </TouchableOpacity>
+          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner')}>
+
             <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
               ADOPTION
-            </Text>
-          </View>
+            </Text>   
+          </TouchableOpacity>
+          
         </View>
       </View>
     </SafeAreaView>

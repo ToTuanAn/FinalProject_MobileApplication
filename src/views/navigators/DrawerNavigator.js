@@ -20,6 +20,7 @@ import { collection, addDoc, getDoc, doc } from "firebase/firestore";
 import {db, auth}  from '../../../firebase'
 import { userConverter } from '../converters/User';
 import { onAuthStateChanged } from "firebase/auth";
+import FavoriteScreen from '../screens/FavoriteScreen';
 const Drawer = createDrawerNavigator();
 
 const DrawerScreenContainer = ({children}) => {
@@ -184,7 +185,7 @@ const DrawerNavigator = () => {
         }}>
         {props => (
           <DrawerScreenContainer>
-            <HomeScreen {...props} />
+            <FavoriteScreen {...props} />
           </DrawerScreenContainer>
         )}
       </Drawer.Screen>

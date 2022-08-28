@@ -71,7 +71,7 @@ const Card = ({pet, navigation}) => {
           <View style={{marginTop: 5, flexDirection: 'row'}}>
             <Icon name="map-marker" color={COLORS.primary} size={18} />
             <Text style={{fontSize: 12, color: COLORS.grey, marginLeft: 5}}>
-              Distance:7.8km
+              address
             </Text>
           </View>
         </View>
@@ -148,7 +148,7 @@ const HomeScreen = ({navigation}) => {
           }}
           size={40}/>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" showsVerticalScrollIndicator={false}>
         <View style={style.mainContainer}>
           {/* Render the search inputs and icons */}
           <View style={style.searchInputContainer}>
@@ -204,7 +204,7 @@ const HomeScreen = ({navigation}) => {
             <FlatList
               showsVerticalScrollIndicator={false}
               data={filteredPets}
-              renderItem={({item}) => (
+              renderItem={({item}) => ( 
                 <Card pet={item} navigation={navigation} />
               )}
             />

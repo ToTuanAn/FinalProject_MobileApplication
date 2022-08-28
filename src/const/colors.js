@@ -1,5 +1,5 @@
 const COLORS = {
-  primary: '#9F21FD',
+  primary: '#db8bf7',
   secondary: '#88b3b5',
   textPrimary: '#fff',
   dark: '#616161',
@@ -9,7 +9,7 @@ const COLORS = {
   white: '#FFFFFF',
   grey: '#a8a8a8',
   black: '#000',
-  violet: '#9F21FD',
+  violet: '#db8bf7',
 };
 
 
