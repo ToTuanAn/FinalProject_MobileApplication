@@ -14,8 +14,8 @@ import {GradientButton} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const InfoOwner = ({navigation}) => {
-
+export const InfoOwner = ({navigation, route}) => {
+  const pet = route.params;
     const [image,setImage] = React.useState('https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1214428300?k=20&m=1214428300&s=612x612&w=0&h=MOvSM2M1l_beQ4UzfSU2pfv4sRjm0zkpeBtIV-P71JE=')
   return (
     <>
@@ -33,7 +33,7 @@ export const InfoOwner = ({navigation}) => {
           <Animatable.Image
             animation="pulse"
             source={{
-                uri : image
+                uri : pet?.userimageurl
             }}
             style ={{width: 170, height: 170, borderRadius: 400/ 2}}
             resizeMode="stretch"
@@ -51,22 +51,22 @@ export const InfoOwner = ({navigation}) => {
           </View>
           <View style = {style.action}>
           <FontAwesome name ="user-o" size = {20}/>
-          <Text style= {style.textInput} >Name</Text>
+          <Text style= {style.textInput} >{pet?.username}</Text>
           </View>
 
           <View style = {style.action}>
           <FontAwesome name ="home" size = {20}/>
-          <Text style= {style.textInput} >Address</Text>
+          <Text style= {style.textInput} >{pet?.useraddress}</Text>
           </View>
 
           <View style = {style.action}>
           <FontAwesome name ="phone" size = {20}/>
-          <Text style= {style.textInput} >Phone</Text>
+          <Text style= {style.textInput} >{pet?.userphone}</Text>
           </View>
 
           <View style = {style.action}>
           <Icon name ="email" size = {20}/>
-          <Text style= {style.textInput} >Mail</Text>
+          <Text style= {style.textInput} >{pet?.useremail}</Text>
           </View>
 
           <TouchableOpacity style = {style.commandButton} onPress={() => navigation.navigate("HomeScreen")}>

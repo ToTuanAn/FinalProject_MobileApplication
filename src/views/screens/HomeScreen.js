@@ -31,6 +31,11 @@ const petCategories = [
 ];
 
 const Card = ({pet, navigation}) => {
+  let icon_name = 'gender-male';
+  if(!pet.gender){
+    icon_name = 'gender-female';
+  }
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -56,7 +61,7 @@ const Card = ({pet, navigation}) => {
               style={{fontWeight: 'bold', color: COLORS.dark, fontSize: 20}}>
               {pet?.name}
             </Text>
-            <Icon name="gender-male" size={22} color={COLORS.grey} />
+            <Icon name={icon_name} size={22} color={COLORS.grey} />
           </View>
 
           {/* Render the age and type */}
@@ -64,14 +69,14 @@ const Card = ({pet, navigation}) => {
             {pet?.type}
           </Text>
           <Text style={{fontSize: 10, marginTop: 5, color: COLORS.grey}}>
-            {pet?.age}
+            {pet?.age} years old
           </Text>
 
           {/* Render distance and the icon */}
           <View style={{marginTop: 5, flexDirection: 'row'}}>
             <Icon name="map-marker" color={COLORS.primary} size={18} />
             <Text style={{fontSize: 12, color: COLORS.grey, marginLeft: 5}}>
-              address
+              {pet?.useraddress}
             </Text>
           </View>
         </View>
@@ -84,7 +89,9 @@ const HomeScreen = ({navigation}) => {
   const [selectedCategoryIndex, setSeletedCategoryIndex] = React.useState(0);
   const [filteredPets, setFilteredPets] = React.useState([]);
   const [userData, setUserData] = useState(null);
+  const [isloading, setIsLoading] = useState(null);
   const [pets, setPets] = useState([]);
+  //const [userFavor, setUserFavor] = useState(null);
   //const [loading, setLoading] = useState(true);
 
 
@@ -95,33 +102,51 @@ const HomeScreen = ({navigation}) => {
         getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
           if (docSnap.exists()) {
             setUserData(docSnap.data());
-            return docSnap.data();
+            //setUserFavor(docSnap.data().favoritepets);
+            //return docSnap.data();
           } else {
             console.log("No such document!");
           }
         })
       }
     });
+    
   }
 
   const getPets = async() =>{
     const petsRef = collection(db,'pets');
     const snapshot = await getDocs(petsRef);
+    //const [userInfo, setUserInfo] = useState(null);
     let list = [];
-    snapshot.forEach((doc) => {
-      const {age,category,imageurl,name,type} = doc.data()
-      list.push({id: doc.id, age, category, imageurl, name, type});
-    });
-    //console.log(list)
+    let userInfo = {};
+    await snapshot.forEach(async (document) => {
+      const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
+      
+      await getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
+        if (docSnap.exists()) {
+          userInfo = docSnap.data();
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .then( () => {
+      //console.log(userInfo)
+      list.push({id: document.id, age, category, description, gender, imageurl, name, ownerID, type, 
+                username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
+                userphone: userInfo.phonenum, useremail: userInfo.email});
+    })
+    })
+    console.log("an dep trai ", list)
     setPets(list);
+    setIsLoading(false);
   }
 
   const fliterPet = index => {
-    console.log(pets)
+    //console.log(pets)
     const currentPets = pets.filter(
       item => item?.category?.toUpperCase() == petCategories[index].name,
     );
-    console.log(currentPets)
+    //console.log(currentPets)
     setFilteredPets(currentPets);
   };
 
@@ -130,12 +155,12 @@ const HomeScreen = ({navigation}) => {
     getPets();
   }, []);
 
-
   React.useEffect(() => {
+    
     fliterPet(0);
-    console.log(pets)
+    //console.log(pets)
   }, [pets])
-  //console.log(userData)
+  
   return (
     <SafeAreaView style={{flex: 1, color: COLORS.white}}>
       <View style={style.header}>
@@ -201,7 +226,7 @@ const HomeScreen = ({navigation}) => {
 
           {/* Render the cards with flatlist */}
           <View style={{marginTop: 20}}>
-            <FlatList
+            <FlatList contentInsetAdjustmentBehavior="automatic"
               showsVerticalScrollIndicator={false}
               data={filteredPets}
               renderItem={({item}) => ( 

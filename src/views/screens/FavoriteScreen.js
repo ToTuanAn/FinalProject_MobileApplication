@@ -1,19 +1,24 @@
 import { StyleSheet, Text, View,TouchableOpacity,StatusBar,
-  Dimensions, FlatList} from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+  Dimensions,
+  Image,
+  TextInput,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  } from 'react-native'
+import React, {useState, useEffect} from 'react'
 import COLORS from '../../const/colors'
 import * as Animatable from 'react-native-animatable';
 import {GradientButton} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import pets from '../../const/pets';
-import { ScrollView } from 'react-native-gesture-handler';
+import {db, auth}  from '../../../firebase'
+import { collection, getDocs, getDoc, doc, updateDoc } from "firebase/firestore"; 
+import { userConverter } from '../converters/User';
 
 
 const {height} = Dimensions.get('window');
-
-
 
 const Card = ({pet, navigation}) => {
   return (
@@ -24,7 +29,7 @@ const Card = ({pet, navigation}) => {
         {/* Render the card image */}
         <View style={styles.cardImageContainer}>
           <Image
-            source={pet.image}
+            source={{uri: pet.imageurl}}
             style={{
               width: '100%',
               height: '100%',
@@ -66,35 +71,61 @@ const Card = ({pet, navigation}) => {
 };
 
 const FavoriteScreen = ({navigation,route}) => {
+  const [userFavor, setUserFavor] = useState([]);
+  const [pets, setPets] = useState([]);
+  
 
-  // const [data,setData] = React.useState(
-  //   [
-  //   {
-  //     id: '1',
-  //     name: 'Lily',
-  //     image: require('../assets/cat1.png'),
-  //     type: 'Chausie',
-  //     age: '5 years old',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Lucy',
-  //     image: require('../assets/cat2.png'),
-  //     type: 'Bobtail',
-  //     age: '2 years old',
-  //   },
-  //   {
-  //     id: '3',
-  //     name: 'Nala',
-  //     image: require('../assets/cat3.png'),
-  //     type: 'Ragamuffin',
-  //     age: '2 years old',
-  //   },
-  // ]);
+  const handleFavorite = () => {
+    const user = auth.currentUser;
+    const userDocRef = doc(db, "users", user.uid);
+    getDoc(userDocRef).then(docSnap => {
+      setUserFavor(docSnap.data().favoritepets)
+    })
+  }
+
+
+  const getPets = async() =>{
+    const favorlist = [...userFavor]
+    let list = [];
+
+    for (var i in favorlist){
+      const favor = favorlist[i]
+      getDoc(doc(db,'pets',favor)).then(document => {
+        
+        const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
+        let userInfo = {};
+
+        getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            userInfo = docSnap.data();
+            
+            list.push({id: favor, age, category, description, gender, imageurl, name, ownerID, type, 
+              username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
+              userphone: userInfo.phonenum, useremail: userInfo.email});
+            
+          } else {
+
+          }
+        })
+      })
+    }
+    return list
+  }
+
+  
+  useEffect(() => {
+    handleFavorite();
+  }, [])
+
+  useEffect(()=>{
+    getPets().then((list) => {setPets(list)});
+    console.log(pets)
+  }, [])
+  
   return (
     <SafeAreaView style = {styles.container}>
     <View style={styles.headerContainer}>
-      <TouchableOpacity style={styles.backArrow} onPress = {() => navigation.navigate("HomeScreen")}>
+      <TouchableOpacity style={styles.backArrow} onPress = {() => navigation.goBack("HomeScreen")}>
         <Icon name="arrow-left" size={30} />
       </TouchableOpacity>
       <View style={styles.title}>
@@ -108,25 +139,19 @@ const FavoriteScreen = ({navigation,route}) => {
 
       </View>
 
-      {/* <View style={{marginTop: 20}}>
+      <View style={{marginTop: 20}}>
             <FlatList
               showsVerticalScrollIndicator={false}
-              data={data}
-              renderItem={({item}) => (
-                <Card pet={item} navigation={navigation} />
-
-              )
-    
-              }
-            />
-          </View>  */}
+              data={pets}
+              renderItem={({item}) => (<Card pet={item} navigation={navigation} /> )} />
+      </View> 
 
 
       </ScrollView>
-
     </SafeAreaView>
   )
 }
+
 
 export default FavoriteScreen
 
@@ -181,5 +206,14 @@ const styles = StyleSheet.create({
     width: 140,
     backgroundColor: COLORS.background,
     borderRadius: 20,
+  },
+  iconCon: {
+    backgroundColor: COLORS.primary,
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
   },
 })

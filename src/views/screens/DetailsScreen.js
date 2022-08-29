@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, setState, useEffect} from 'react';
 import {
   Text,
   ImageBackground,
@@ -11,36 +11,57 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
+import {db, auth}  from '../../../firebase'
+import { collection, addDoc, getDoc, doc, updateDoc } from "firebase/firestore"; 
 
 const DetailsScreen = ({navigation, route}) => {
-    const pet = route.params;
-    return (
-        <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
-            <StatusBar backgroundColor={COLORS.background} />
-            <View style={{height: 400, backgroundColor: COLORS.background}}>
-                <ImageBackground
-                    resizeMode="contain"
-                    source={pet?.image}
-                    style={{
-                        height: 280,
-                        top: 20,
-                    }}
-                >
-                    {/* Render  Header */}
-                    <View style={style.header}>
-                        <Icon
-                            name="arrow-left"
-                            size={28}
-                            color={COLORS.dark}
-                            onPress={navigation.goBack}
-                        />
-                        <Icon
-                            name="dots-vertical"
-                            size={28}
-                            color={COLORS.dark}
-                        />
-                    </View>
-                </ImageBackground>
+
+  const pet= route.params;
+  const user = auth.currentUser;
+  const userDocRef = doc(db, "users", user.uid);
+  const [userFavor, setUserFavor] = useState([]);
+  
+  const handleFavorite = () => {
+    getDoc(userDocRef).then(docSnap => {
+      let list = docSnap.data().favoritepets;
+      if (!list.includes(pet.id)){
+        list.push(pet.id)
+        setUserFavor(list)
+        updateDoc(userDocRef, {
+          "favoritepets": list
+        });
+      }else{
+        list = list.filter(value => value != pet.id)
+        setUserFavor(list)
+        updateDoc(userDocRef, {
+          "favoritepets": list
+        });
+      }
+    })
+  }
+
+  return (
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
+      <StatusBar backgroundColor={COLORS.background} />
+      <View style={{height: 400, backgroundColor: COLORS.background}}>
+        <ImageBackground
+          resizeMode="contain"
+          source={{uri: pet?.imageurl}}
+          style={{
+            height: 280,
+            top: 20,
+          }}>
+          {/* Render  Header */}
+          <View style={style.header}>
+            <Icon
+              name="arrow-left"
+              size={28}
+              color={COLORS.dark}
+              onPress={navigation.goBack}
+            />
+            <Icon name="dots-vertical" size={28} color={COLORS.dark} />
+          </View>
+        </ImageBackground>
 
                 <View style={style.detailsContainer}>
                     {/* Pet name and gender icon */}
@@ -66,47 +87,64 @@ const DetailsScreen = ({navigation, route}) => {
                         />
                     </View>
 
-                    {/* Render Pet type and age */}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginTop: 5,
-                        }}
-                    >
-                        <Text style={{fontSize: 12, color: COLORS.dark}}>
-                            {pet.type}
-                        </Text>
-                        <Text style={{fontSize: 13, color: COLORS.dark}}>
-                            {pet.age}
-                        </Text>
-                    </View>
+          {/* Render Pet type and age */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 5,
+            }}>
+            <Text style={{fontSize: 12, color: COLORS.dark}}>{pet.type}</Text>
+            <Text style={{fontSize: 13, color: COLORS.dark}}>{pet.age} years old</Text>
+          </View>
 
-                    {/* Render location and icon */}
-                    <View style={{marginTop: 5, flexDirection: 'row'}}>
-                        <Icon
-                            name="map-marker"
-                            color={COLORS.primary}
-                            size={20}
-                        />
-                        <Text
-                            style={{
-                                fontSize: 14,
-                                color: COLORS.grey,
-                                marginLeft: 5,
-                            }}
-                        >
-                            5 Bulvarna-Kudriavska Street, Kyiv
-                        </Text>
-                    </View>
-                </View>
+          {/* Render location and icon */}
+          <View style={{marginTop: 5, flexDirection: 'row'}}>
+            <Icon name="map-marker" color={COLORS.primary} size={20} />
+            <Text style={{fontSize: 14, color: COLORS.grey, marginLeft: 5}}>
+              {pet?.useraddress}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Comment container */}
+      <View style={{marginTop: 80, justifyContent: 'space-between', flex: 1}}>
+        <View>
+          {/* Render user image , name and date */}
+          <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
+            <Image
+              source={{uri: pet?.userimageurl}}
+              style={{height: 40, width: 40, borderRadius: 20}}
+            />
+            <View style={{flex: 1, paddingLeft: 10}}>
+              <Text
+                style={{color: COLORS.dark, fontSize: 12, fontWeight: 'bold'}}>
+                {pet?.username}
+              </Text>
+              <Text
+                style={{
+                  color: COLORS.grey,
+                  fontSize: 11,
+                  fontWeight: 'bold',
+                  marginTop: 2,
+                }}>
+                Owner
+              </Text>
             </View>
+            <Text style={{color: COLORS.grey, fontSize: 12}}>May 25, 2020</Text>
+          </View>
+          <Text style={style.comment}>
+            {pet?.description}
+          </Text>
+        </View>
+
         {/* Render footer */}
         <View style={style.footer}>
-          <TouchableOpacity style={style.iconCon}>
+          <TouchableOpacity style={style.iconCon} onPress={handleFavorite}>
             <Icon name="heart-outline" size={22} color={COLORS.white} />
           </TouchableOpacity>
-          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner')}>
+          <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner',pet)}>
 
             <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
               ADOPTION
