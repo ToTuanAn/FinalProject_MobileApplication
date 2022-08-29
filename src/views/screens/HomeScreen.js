@@ -91,6 +91,7 @@ const HomeScreen = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [isloading, setIsLoading] = useState(null);
   const [pets, setPets] = useState([]);
+  //const [userFavor, setUserFavor] = useState(null);
   //const [loading, setLoading] = useState(true);
 
 
@@ -101,7 +102,7 @@ const HomeScreen = ({navigation}) => {
         getDoc(doc(db, "users", uid).withConverter(userConverter)).then(docSnap => {
           if (docSnap.exists()) {
             setUserData(docSnap.data());
-            
+            //setUserFavor(docSnap.data().favoritepets);
             //return docSnap.data();
           } else {
             console.log("No such document!");
@@ -118,10 +119,10 @@ const HomeScreen = ({navigation}) => {
     //const [userInfo, setUserInfo] = useState(null);
     let list = [];
     let userInfo = {};
-    snapshot.forEach((document) => {
+    await snapshot.forEach(async (document) => {
       const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
       
-      getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
+      await getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
         if (docSnap.exists()) {
           userInfo = docSnap.data();
         } else {
@@ -135,12 +136,13 @@ const HomeScreen = ({navigation}) => {
                 userphone: userInfo.phonenum, useremail: userInfo.email});
     })
     })
+    console.log("an dep trai ", list)
     setPets(list);
     setIsLoading(false);
   }
 
   const fliterPet = index => {
-    console.log(pets)
+    //console.log(pets)
     const currentPets = pets.filter(
       item => item?.category?.toUpperCase() == petCategories[index].name,
     );
@@ -153,11 +155,11 @@ const HomeScreen = ({navigation}) => {
     getPets();
   }, []);
 
-
   React.useEffect(() => {
+    
     fliterPet(0);
     //console.log(pets)
-  }, [isloading])
+  }, [pets])
   
   return (
     <SafeAreaView style={{flex: 1, color: COLORS.white}}>
@@ -224,7 +226,7 @@ const HomeScreen = ({navigation}) => {
 
           {/* Render the cards with flatlist */}
           <View style={{marginTop: 20}}>
-            <FlatList
+            <FlatList contentInsetAdjustmentBehavior="automatic"
               showsVerticalScrollIndicator={false}
               data={filteredPets}
               renderItem={({item}) => ( 

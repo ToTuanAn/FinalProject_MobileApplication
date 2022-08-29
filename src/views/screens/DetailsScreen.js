@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, setState, useEffect} from 'react';
 import {
   Text,
   ImageBackground,
@@ -11,9 +11,34 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
+import {db, auth}  from '../../../firebase'
+import { collection, addDoc, getDoc, doc, updateDoc } from "firebase/firestore"; 
 
 const DetailsScreen = ({navigation, route}) => {
-  const pet = route.params;
+  const pet= route.params;
+  const user = auth.currentUser;
+  const userDocRef = doc(db, "users", user.uid);
+  const [userFavor, setUserFavor] = useState([]);
+  
+  const handleFavorite = () => {
+    getDoc(userDocRef).then(docSnap => {
+      let list = docSnap.data().favoritepets;
+      if (!list.includes(pet.id)){
+        list.push(pet.id)
+        setUserFavor(list)
+        updateDoc(userDocRef, {
+          "favoritepets": list
+        });
+      }else{
+        list = list.filter(value => value != pet.id)
+        setUserFavor(list)
+        updateDoc(userDocRef, {
+          "favoritepets": list
+        });
+      }
+    })
+  }
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <StatusBar backgroundColor={COLORS.background} />
@@ -101,7 +126,7 @@ const DetailsScreen = ({navigation, route}) => {
 
         {/* Render footer */}
         <View style={style.footer}>
-          <TouchableOpacity style={style.iconCon}>
+          <TouchableOpacity style={style.iconCon} onPress={handleFavorite}>
             <Icon name="heart-outline" size={22} color={COLORS.white} />
           </TouchableOpacity>
           <TouchableOpacity style={style.btn} onPress={() => navigation.navigate('InfoOwner',pet)}>
