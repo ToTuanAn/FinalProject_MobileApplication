@@ -16,7 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {db, auth} from '../../../firebase';
 import {GradientButton} from '../../components';
-//import {storeData, retrieveData} from '../../utils'
+import {storeData, retrieveData} from '../../utils';
 
 const SignInScreen = ({navigation}) => {
     const [data, setData] = React.useState({
@@ -66,7 +66,7 @@ const SignInScreen = ({navigation}) => {
                 }
                 return;
             }
-            
+
             await signInWithEmailAndPassword(auth, data.email, data.password)
                 .then(userCredentials => {
                     const user = userCredentials.user;
@@ -76,25 +76,23 @@ const SignInScreen = ({navigation}) => {
                             ToastAndroid.SHORT,
                         );
                     }
-                    
-                    //storeData("email", data.email);
-                    //storeData("password", data.password);
-                    
+                    storeData('email', data.email);
+                    storeData('password', data.password);
+
                     navigation.navigate('HomeScreen');
                 })
                 .catch(error => alert(error.message));
         };
     };
 
-    useEffect(async ()=>{
-        console.log("RUNNNN")
+    useEffect(async () => {
+        console.log('RUNNNN');
         try {
-            //const email = await retrieveData("email");
-            //const pass = await retrieveData("password");
-            
-            if (!email || !pass) return
-            
-            console.log("Error", email, pass)
+            const email = await retrieveData('email');
+            const pass = await retrieveData('password');
+
+            if (!email || !pass) return;
+        
             await signInWithEmailAndPassword(auth, email, pass)
                 .then(userCredentials => {
                     const user = userCredentials.user;
@@ -104,14 +102,14 @@ const SignInScreen = ({navigation}) => {
                             ToastAndroid.SHORT,
                         );
                     }
-                    
+
                     navigation.navigate('HomeScreen');
                 })
-                .catch(()=>console.log("CAN'T SIGN IN"));
+                .catch(() => console.log("CAN'T SIGN IN"));
         } catch {
-            console.log("Error")
+            console.log('Error');
         }
-    }, [])
+    }, []);
 
     return (
         <View style={style.container}>
