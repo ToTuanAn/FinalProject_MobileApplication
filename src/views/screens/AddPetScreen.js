@@ -6,15 +6,17 @@ import {
     ImageBackground,
     TextInput,
     StyleSheet,
-    Alert,
 } from 'react-native';
+import {
+    Button
+} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import COLORS from '../../const/colors';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {useForm, Controller} from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useAddPet} from '../../hooks/useAddPet';
 import {storage} from '../../../firebase';
@@ -37,10 +39,10 @@ const AddPetScreen = ({navigation, route}) => {
     const [speciesOpen, setSpeciesOpen] = useState(false);
     const [speciesValue, setSpeciesValue] = useState(null);
     const [species, setSpecies] = useState([
-        {label: 'Cat', value: 'cat'},
-        {label: 'Dog', value: 'dog'},
-        {label: 'Bunny', value: 'bunny'},
-        {label: 'Bird', value: 'bird'},
+        {label: 'Cat', value: 'cats'},
+        {label: 'Dog', value: 'dogs'},
+        {label: 'Bunny', value: 'bunnies'},
+        {label: 'Bird', value: 'birds'},
     ]);
 
     const [loading, setLoading] = useState(false);
@@ -118,7 +120,7 @@ const AddPetScreen = ({navigation, route}) => {
 
                 <Text style={styles.label}>Your pet breed</Text>
                 <Controller
-                    name="breed"
+                    name="type"
                     defaultValue=""
                     control={control}
                     render={({field: {onChange, value}}) => (
@@ -195,7 +197,7 @@ const AddPetScreen = ({navigation, route}) => {
                     </View>
                     <Text style={styles.label}>Your pet species</Text>
                     <Controller
-                        name="species"
+                        name="category"
                         defaultValue=""
                         control={control}
                         render={({field: {onChange, value}}) => (
@@ -274,13 +276,15 @@ const AddPetScreen = ({navigation, route}) => {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    style={{marginBottom: 20}}
-                    loading={addPetPublishing}
+                <Button 
+                    mode="contained" 
+                    style={{backgroundColor: COLORS.violet, margin: 20, borderRadius: 10}}
                     onPress={handleAddPetFormSubmit}
+                    loading={addPetPublishing}
+                    disabled={addPetPublishing}
                 >
                     <Text style={styles.getStarted}>Done</Text>
-                </TouchableOpacity>
+                </Button>
             </SafeAreaView>
         </ScrollView>
     );
@@ -331,7 +335,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   getStarted: {
-    backgroundColor: COLORS.violet,
+    // backgroundColor: COLORS.violet,
     color: "white",
     textAlign: "center",
     marginHorizontal: 60,

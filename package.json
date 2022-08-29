@@ -31,8 +31,8 @@
     "react-native-select-dropdown": "^2.0.4",
     "react-native-share": "^7.9.0",
     "react-native-svg": "^12.1.1",
-    "react-native-vector-icons": "^8.1.0",
-    "uuidv4": "^6.2.13"
+    "react-native-uuid": "^2.0.1",
+    "react-native-vector-icons": "^8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

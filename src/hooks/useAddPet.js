@@ -1,36 +1,55 @@
 import {useMemo, useRef, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {collection, addDoc, setDoc, doc} from 'firebase/firestore';
-// import {uuid} from 'uuidv4';
-import {db} from '../../firebase';
+import uuid from 'react-native-uuid';
+import {db, auth} from '../../firebase';
+
 
 export const useAddPet = () => {
-    // const queryClient = useQueryClient();
     const [addPetPublishing, setAddPetPublishing] = useState(false);
     const [petImg, setPetImg] = useState('');
-    // const toast = useToast();
-    // const router = useRouter();
-    // const dispatch = useDispatch();
-
     const {handleSubmit, control} = useForm();
-
+    
     const onSubmit = data => {
-        console.log('data', data);
-        var key = 'hello world';
-
-        const petData = {
-            ...data,
-            id: key,
-            image: petImg,
-        };
+        var key = uuid.v4();
+        
+        const userId = auth.currentUser.uid;
+        const age = parseInt(data.age, 10);
+        
+        if (!userId || !age) {
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Add pet failed',
+                    ToastAndroid.SHORT,
+                );
+            }
+            return  
+        } 
 
         setAddPetPublishing(true);
+        
+        const petData = {
+            ...data,
+            imageurl: petImg,
+            ownerID: userId,
+            category: data.category,
+            gender: data.gender == 'female',
+            age,
+        };
 
+        console.log('pet data: ', petData);
+        
         const newPetsRef = collection(db, 'pets');
         const newPet = doc(newPetsRef, key);
 
         setDoc(newPet, petData).then(() => {
             setAddPetPublishing(false);
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Add pet successfully',
+                    ToastAndroid.SHORT,
+                );
+            }
         });
     };
 
