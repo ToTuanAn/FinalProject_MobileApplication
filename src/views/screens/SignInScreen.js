@@ -76,7 +76,6 @@ const SignInScreen = ({navigation}) => {
                             ToastAndroid.SHORT,
                         );
                     }
-
                     storeData('email', data.email);
                     storeData('password', data.password);
 
@@ -93,8 +92,7 @@ const SignInScreen = ({navigation}) => {
             const pass = await retrieveData('password');
 
             if (!email || !pass) return;
-
-            console.log('Error', email, pass);
+        
             await signInWithEmailAndPassword(auth, email, pass)
                 .then(userCredentials => {
                     const user = userCredentials.user;
