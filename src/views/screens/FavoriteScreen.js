@@ -73,54 +73,56 @@ const Card = ({pet, navigation}) => {
 const FavoriteScreen = ({navigation,route}) => {
   const [userFavor, setUserFavor] = useState([]);
   const [pets, setPets] = useState([]);
-  
-
-  const handleFavorite = () => {
-    const user = auth.currentUser;
-    const userDocRef = doc(db, "users", user.uid);
-    getDoc(userDocRef).then(docSnap => {
-      setUserFavor(docSnap.data().favoritepets)
-    })
-  }
 
 
   const getPets = async() =>{
-    const favorlist = [...userFavor]
-    let list = [];
+    const user = auth.currentUser;
+    const userDocRef = doc(db, "users", user.uid);
+    let favorlist;
+    await getDoc(userDocRef).then(docSnap => {
+      favorlist = docSnap.data().favoritepets
+      setUserFavor(docSnap.data().favoritepets)
+    })
+    //const favorlist = [...userFavor]
+    console.log(favorlist)
+    try{
+      let list = [];
 
-    for (var i in favorlist){
-      const favor = favorlist[i]
-      getDoc(doc(db,'pets',favor)).then(document => {
-        
-        const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
-        let userInfo = {};
+      for (var i in favorlist){
+        const favor = favorlist[i]
+        await getDoc(doc(db,'pets',favor)).then(async document  => {
+          
+          const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
+          let userInfo = {};
 
-        getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
-          if (docSnap.exists()) {
-            userInfo = docSnap.data();
-            
-            list.push({id: favor, age, category, description, gender, imageurl, name, ownerID, type, 
-              username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
-              userphone: userInfo.phonenum, useremail: userInfo.email});
-            
-          } else {
-
-          }
+          await getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(async docSnap => {
+            if (docSnap.exists()) {
+              userInfo = docSnap.data();
+              
+               list.push({id: favor, age, category, description, gender, imageurl, name, ownerID, type, 
+                username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
+                userphone: userInfo.phonenum, useremail: userInfo.email});
+              
+            } 
+          })
         })
-      })
+      }
+      setPets(list)
+    } catch(e){
+      console.log(e);
     }
-    return list
   }
 
   
   useEffect(() => {
-    handleFavorite();
+    getPets().then(() => {console.log(pets)});
+    //console.log(pets)
   }, [])
 
-  useEffect(()=>{
-    getPets().then((list) => {setPets(list)});
-    console.log(pets)
-  }, [])
+  // useEffect(()=>{
+  //   getPets().then((list) => {setPets(list)});
+  //   console.log(pets)
+  // }, [])
   
   return (
     <SafeAreaView style = {styles.container}>
@@ -136,9 +138,6 @@ const FavoriteScreen = ({navigation,route}) => {
 
       <ScrollView contentInsetAdjustmentBehavior="automatic" >
       <View style={styles.listContainer}>
-
-      </View>
-
       <View style={{marginTop: 20}}>
             <FlatList
               showsVerticalScrollIndicator={false}
@@ -146,6 +145,9 @@ const FavoriteScreen = ({navigation,route}) => {
               renderItem={({item}) => (<Card pet={item} navigation={navigation} /> )} />
       </View> 
 
+      </View>
+
+      
 
       </ScrollView>
     </SafeAreaView>
