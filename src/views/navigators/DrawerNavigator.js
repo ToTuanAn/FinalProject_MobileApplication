@@ -14,10 +14,10 @@ import ProfileScreen from '../screens/ProfileScreen';
 import COLORS from '../../const/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddPetScreen from '../screens/AddPetScreen';
-import { collection, addDoc, getDoc, doc } from "firebase/firestore"; 
-import {db, auth}  from '../../../firebase'
-import { userConverter } from '../converters/User';
-import { onAuthStateChanged } from "firebase/auth";
+import {collection, addDoc, getDoc, doc} from 'firebase/firestore';
+import {db, auth} from '../../../firebase';
+import {userConverter} from '../converters/User';
+import {onAuthStateChanged} from 'firebase/auth';
 import FavoriteScreen from '../screens/FavoriteScreen';
 const Drawer = createDrawerNavigator();
 
@@ -199,19 +199,24 @@ const DrawerNavigator = () => {
                     </DrawerScreenContainer>
                 )}
             </Drawer.Screen>
-      <Drawer.Screen
-        name="FAVOURITES"
-        options={{
-          drawerIcon: ({color}) => (
-            <Icon name="heart" size={25} style={{marginRight: -20, color}} />
-          ),
-        }}>
-        {props => (
-          <DrawerScreenContainer>
-            <FavoriteScreen {...props} />
-          </DrawerScreenContainer>
-        )}
-      </Drawer.Screen>
+            <Drawer.Screen
+                name="FAVOURITES"
+                options={{
+                    drawerIcon: ({color}) => (
+                        <Icon
+                            name="heart"
+                            size={25}
+                            style={{marginRight: -20, color}}
+                        />
+                    ),
+                }}
+            >
+                {props => (
+                    <DrawerScreenContainer>
+                        <FavoriteScreen {...props} />
+                    </DrawerScreenContainer>
+                )}
+            </Drawer.Screen>
             <Drawer.Screen
                 name="PROFILE"
                 options={{
