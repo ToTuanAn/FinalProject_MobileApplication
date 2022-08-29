@@ -92,7 +92,7 @@ const SignInScreen = ({navigation}) => {
             const pass = await retrieveData('password');
 
             if (!email || !pass) return;
-        
+
             await signInWithEmailAndPassword(auth, email, pass)
                 .then(userCredentials => {
                     const user = userCredentials.user;
@@ -117,6 +117,23 @@ const SignInScreen = ({navigation}) => {
                 backgroundColor={COLORS.violet}
                 barStyle="light-content"
             />
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flex: 1,
+                    alignSelf: 'center',
+                    marginTop: 25,
+                }}
+            >
+                <Animatable.Image
+                    animation="bounce"
+                    interationCount="infinite"
+                    source={require('../../assets/logo_pet.jpg')}
+                    style={{width: 170, height: 170, borderRadius: 250}}
+                    resizeMode="stretch"
+                />
+            </View>
             <View style={style.header}>
                 <Text style={style.text_header}>
                     Welcome To Saigon Petadoption
@@ -213,9 +230,9 @@ const style = StyleSheet.create({
     },
     header: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         paddingHorizontal: 20,
-        paddingBottom: 50,
+        paddingBottom: 10,
         backgroundColor: COLORS.violet,
     },
     footer: {

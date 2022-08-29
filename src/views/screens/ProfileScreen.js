@@ -154,7 +154,7 @@ const ProfileScreen = ({navigation, route}) => {
                     ]}
                 >
                     <Title>
-                        <FontAwesome name="bitcoin" size={20} />
+                        <FontAwesome name="dollar" size={20} />
                         {userData ? userData.money : '0'}
                     </Title>
                     <Caption>Wallet</Caption>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: COLORS.light,
     },
     userInfoSection: {
         paddingHorizontal: 30,

@@ -303,6 +303,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        backgroundColor: '#fcf7fa',
     },
     input: {
         borderStyle: 'solid',
@@ -318,7 +319,10 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 7,
         marginStart: 10,
-        fontWeight: 'bold',
+        //fontWeight: 'bold',
+        color: '#0e614b',
+        fontSize: 18,
+        fontFamily: 'lucida grande',
     },
     placeholderStyles: {
         color: 'grey',
@@ -365,9 +369,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
+        borderBottomColor: 15,
     },
     titleText: {
-        fontSize: 20,
+        fontSize: 25,
         marginRight: 40,
+        fontWeight: 'bold',
+        color: '#0e614b',
     },
 });
