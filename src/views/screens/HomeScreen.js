@@ -114,28 +114,29 @@ const HomeScreen = ({navigation}) => {
   }
 
   const getPets = async() =>{
-    const petsRef = collection(db,'pets');
-    const snapshot = await getDocs(petsRef);
-    //const [userInfo, setUserInfo] = useState(null);
+    
     let list = [];
     let userInfo = {};
-    await snapshot.forEach(async (document) => {
-      const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
-      
-      await getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
-        if (docSnap.exists()) {
-          userInfo = docSnap.data();
-        } else {
-          console.log("No such document!");
-        }
+    const petsRef = collection(db,'pets');
+    await getDocs(petsRef).then(async (snapshot) => {
+        snapshot.forEach(async (document) => {
+        const {age,category,description,gender,imageurl,name,ownerID,type} = document.data()
+        
+        await getDoc(doc(db, "users", ownerID).withConverter(userConverter)).then(docSnap => {
+          if (docSnap.exists()) {
+            userInfo = docSnap.data();
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .then( () => {
+        //console.log(userInfo)
+        list.push({id: document.id, age, category, description, gender, imageurl, name, ownerID, type, 
+                  username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
+                  userphone: userInfo.phonenum, useremail: userInfo.email});
       })
-      .then( () => {
-      //console.log(userInfo)
-      list.push({id: document.id, age, category, description, gender, imageurl, name, ownerID, type, 
-                username: userInfo.name, userimageurl: userInfo.imageurl, useraddress: userInfo.country,
-                userphone: userInfo.phonenum, useremail: userInfo.email});
-    })
-    })
+      })
+    });
     console.log("an dep trai ", list)
     setPets(list);
     setIsLoading(false);
@@ -152,14 +153,8 @@ const HomeScreen = ({navigation}) => {
 
   React.useEffect(() => {
     getUser();
-    getPets();
+    getPets().then(() => {setSeletedCategoryIndex(0), fliterPet(0)});
   }, []);
-
-  React.useEffect(() => {
-    
-    fliterPet(0);
-    //console.log(pets)
-  }, [pets])
   
   return (
     <SafeAreaView style={{flex: 1, color: COLORS.white}}>
