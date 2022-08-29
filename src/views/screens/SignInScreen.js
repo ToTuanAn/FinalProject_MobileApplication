@@ -16,7 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {db, auth} from '../../../firebase';
 import {GradientButton} from '../../components';
-import {storeData, retrieveData} from '../../utils'
+//import {storeData, retrieveData} from '../../utils'
 
 const SignInScreen = ({navigation}) => {
     const [data, setData] = React.useState({
@@ -77,8 +77,8 @@ const SignInScreen = ({navigation}) => {
                         );
                     }
                     
-                    storeData("email", data.email);
-                    storeData("password", data.password);
+                    //storeData("email", data.email);
+                    //storeData("password", data.password);
                     
                     navigation.navigate('HomeScreen');
                 })
@@ -89,8 +89,8 @@ const SignInScreen = ({navigation}) => {
     useEffect(async ()=>{
         console.log("RUNNNN")
         try {
-            const email = await retrieveData("email");
-            const pass = await retrieveData("password");
+            //const email = await retrieveData("email");
+            //const pass = await retrieveData("password");
             
             if (!email || !pass) return
             

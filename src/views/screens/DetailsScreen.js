@@ -109,7 +109,7 @@ const DetailsScreen = ({navigation, route}) => {
       </View>
 
       {/* Comment container */}
-      <View style={{marginTop: 80, justifyContent: 'space-between', flex: 1}}>
+      <View style={{marginTop: 80, justifyContent: 'space-between', flex: 1}}/>
         <View>
           {/* Render user image , name and date */}
           <View style={{flexDirection: 'row', paddingHorizontal: 20}}>

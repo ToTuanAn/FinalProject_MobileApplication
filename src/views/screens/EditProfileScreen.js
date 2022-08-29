@@ -76,7 +76,7 @@ const EditProfileScreen = ({navigation, route}) => {
 
     useEffect(() => {
         getUser();
-    });
+    },[userData]);
 
     const onSubmit = data => {
         //data.append("image",image.path)
