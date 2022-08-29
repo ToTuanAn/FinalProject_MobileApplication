@@ -1,56 +1,62 @@
-import { useMemo, useRef, useState } from 'react';
-// import { useQueryClient } from 'react-query';
-// import { PlaceChestInput, ChestService } from '../services/chestService';
-// import Quill from 'quill';
-// import { useToast } from '@chakra-ui/react';
-// import { ModalsController } from '../utils/modalsController';
-// import { CREATE_POST_REDIRECT } from '../constants';
-// import { useRouter } from 'next/router';
-// import { useDispatch } from 'react-redux';
+import {useMemo, useRef, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {collection, addDoc, setDoc, doc} from 'firebase/firestore';
+import uuid from 'react-native-uuid';
+import {db, auth} from '../../firebase';
 
-import {useForm, Controller} from 'react-hook-form';
-import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
-// import {uuid} from 'uuidv4';
-import {db} from '../../firebase';
 
 export const useAddPet = () => {
-    // const queryClient = useQueryClient();
     const [addPetPublishing, setAddPetPublishing] = useState(false);
-    const [petImg, setPetImg] = useState("");
-    // const toast = useToast();
-    // const router = useRouter();
-    // const dispatch = useDispatch();
-
-    const { handleSubmit, control } = useForm();
-
-    const onSubmit = data => {
-        console.log("data", data)
-        var key= "hello world"
+    const [petImg, setPetImg] = useState('');
+    const {handleSubmit, control} = useForm();
     
-        const petData = {
-            ...data,
-            id: key,
-            image: petImg
+    const onSubmit = data => {
+        var key = uuid.v4();
+        
+        const userId = auth.currentUser.uid;
+        const age = parseInt(data.age, 10);
+        
+        if (!userId || !age) {
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Add pet failed',
+                    ToastAndroid.SHORT,
+                );
+            }
+            return  
         } 
 
-        setAddPetPublishing(true)
-
-        const newPetsRef = collection(db, "pets");
-        const newPet = doc(newPetsRef, key);
+        setAddPetPublishing(true);
         
-        setDoc(newPet, petData).then(()=>{
+        const petData = {
+            ...data,
+            imageurl: petImg,
+            ownerID: userId,
+            category: data.category,
+            gender: data.gender == 'female',
+            age,
+        };
+
+        console.log('pet data: ', petData);
+        
+        const newPetsRef = collection(db, 'pets');
+        const newPet = doc(newPetsRef, key);
+
+        setDoc(newPet, petData).then(() => {
             setAddPetPublishing(false);
-        })
-          
-    }
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Add pet successfully',
+                    ToastAndroid.SHORT,
+                );
+            }
+        });
+    };
 
     return {
-        // refQuill,
-        // placeChestForm,
         setPetImg,
         addPetPublishing,
         control,
         handleAddPetFormSubmit: handleSubmit(onSubmit),
     };
 };
-

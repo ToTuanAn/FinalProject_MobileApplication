@@ -12,5 +12,4 @@ const COLORS = {
   violet: '#db8bf7',
 };
 
-
 export default COLORS;

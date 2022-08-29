@@ -15,6 +15,7 @@ import {db, auth}  from '../../../firebase'
 import { collection, addDoc, getDoc, doc, updateDoc } from "firebase/firestore"; 
 
 const DetailsScreen = ({navigation, route}) => {
+
   const pet= route.params;
   const user = auth.currentUser;
   const userDocRef = doc(db, "users", user.uid);
@@ -62,15 +63,29 @@ const DetailsScreen = ({navigation, route}) => {
           </View>
         </ImageBackground>
 
-        <View style={style.detailsContainer}>
-          {/* Pet name and gender icon */}
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
-              style={{fontSize: 20, color: COLORS.dark, fontWeight: 'bold'}}>
-              {pet.name}
-            </Text>
-            <Icon name="gender-male" size={25} color={COLORS.grey} />
-          </View>
+                <View style={style.detailsContainer}>
+                    {/* Pet name and gender icon */}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                color: COLORS.dark,
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            {pet.name}
+                        </Text>
+                        <Icon
+                            name="gender-male"
+                            size={25}
+                            color={COLORS.grey}
+                        />
+                    </View>
 
           {/* Render Pet type and age */}
           <View
@@ -135,62 +150,60 @@ const DetailsScreen = ({navigation, route}) => {
               ADOPTION
             </Text>   
           </TouchableOpacity>
-          
         </View>
-      </View>
     </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
-  detailsContainer: {
-    height: 120,
-    backgroundColor: COLORS.white,
-    marginHorizontal: 20,
-    flex: 1,
-    bottom: -60,
-    borderRadius: 18,
-    elevation: 10,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  comment: {
-    marginTop: 10,
-    fontSize: 12.5,
-    color: COLORS.dark,
-    lineHeight: 20,
-    marginHorizontal: 20,
-  },
-  footer: {
-    height: 100,
-    backgroundColor: COLORS.light,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  iconCon: {
-    backgroundColor: COLORS.primary,
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  btn: {
-    backgroundColor: COLORS.primary,
-    flex: 1,
-    height: 50,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    flexDirection: 'row',
-    padding: 20,
-    justifyContent: 'space-between',
-  },
+    detailsContainer: {
+        height: 120,
+        backgroundColor: COLORS.white,
+        marginHorizontal: 20,
+        flex: 1,
+        bottom: -60,
+        borderRadius: 18,
+        elevation: 10,
+        padding: 20,
+        justifyContent: 'center',
+    },
+    comment: {
+        marginTop: 10,
+        fontSize: 12.5,
+        color: COLORS.dark,
+        lineHeight: 20,
+        marginHorizontal: 20,
+    },
+    footer: {
+        height: 100,
+        backgroundColor: COLORS.light,
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    iconCon: {
+        backgroundColor: COLORS.primary,
+        width: 50,
+        height: 50,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    btn: {
+        backgroundColor: COLORS.primary,
+        flex: 1,
+        height: 50,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    header: {
+        flexDirection: 'row',
+        padding: 20,
+        justifyContent: 'space-between',
+    },
 });
 export default DetailsScreen;
