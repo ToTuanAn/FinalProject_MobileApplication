@@ -76,7 +76,7 @@ const EditProfileScreen = ({navigation, route}) => {
 
     useEffect(() => {
         getUser();
-    },[userData]);
+    }, [userData]);
 
     const onSubmit = data => {
         //data.append("image",image.path)
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: COLORS.light,
     },
     commandButton: {
         padding: 15,

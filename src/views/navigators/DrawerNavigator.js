@@ -134,7 +134,7 @@ const DrawerNavigator = () => {
                     fontWeight: 'bold',
                 },
                 drawerActiveTintColor: COLORS.white,
-                drawerInactiveTintColor: COLORS.secondary,
+                drawerInactiveTintColor: '#0e614b',
                 drawerItemStyle: {backgroundColor: null},
                 sceneContainerStyle: {
                     backgroundColor: COLORS.primary,

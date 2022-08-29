@@ -15,9 +15,10 @@ export const AuthenticationScreen = ({navigation}) => {
                 />
                 <View style={style.header}>
                     <Animatable.Image
-                        animation="pulse"
-                        source={require('../../assets/eth.png')}
-                        style={{width: 300, height: 300, borderRadius: 400 / 2}}
+                        animation="fadeInDown"
+                        interationCount="infinite"
+                        source={require('../../assets/logo_pet.jpg')}
+                        style={{width: 300, height: 300, borderRadius: 250}}
                         resizeMode="stretch"
                     />
                 </View>
@@ -86,7 +87,7 @@ const style = StyleSheet.create({
     },
     title: {
         fontFamily: 'Cochin',
-        fontSize: 25,
+        fontSize: 32,
         fontWeight: 'bold',
         marginTop: 20,
     },
