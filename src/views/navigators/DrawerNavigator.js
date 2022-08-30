@@ -19,6 +19,8 @@ import {db, auth} from '../../../firebase';
 import {userConverter} from '../converters/User';
 import {onAuthStateChanged} from 'firebase/auth';
 import FavoriteScreen from '../screens/FavoriteScreen';
+import {IMAGE_LOAD_FAILED} from '../../const';
+
 const Drawer = createDrawerNavigator();
 
 const DrawerScreenContainer = ({children}) => {
@@ -96,11 +98,11 @@ const CustomDrawerContent = props => {
                 }}
             >
                 <Avatar.Image
-                    source={{
-                        uri: userData
-                            ? userData.imageurl || 'No details added.'
-                            : '',
-                    }}
+                    source={ 
+                        !!userData && userData.imageurl != ''
+                            ? { uri: userData.imageurl }
+                            : require('../../assets/default_avatar.png')
+                    }
                     size={80}
                 />
                 <Text

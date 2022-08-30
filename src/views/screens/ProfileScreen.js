@@ -13,9 +13,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 import COLORS from '../../const/colors';
 import {collection, addDoc, getDoc, doc} from 'firebase/firestore';
+import { signOut } from "firebase/auth";
 import {db, auth} from '../../../firebase';
 import {userConverter} from '../converters/User';
 import {onAuthStateChanged} from 'firebase/auth';
+import {ScrollView} from 'react-native-gesture-handler';
+import {storeData, retrieveData} from '../../utils';
 
 const ProfileScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState(null);
@@ -81,9 +84,10 @@ const ProfileScreen = ({navigation, route}) => {
                 <View style={{flexDirection: 'row', marginTop: 15}}>
                     <Avatar.Image
                         source={{
-                            uri: userData
-                                ? userData.imageurl || 'No details added.'
-                                : '',
+                            uri:
+                                !!userData && userData.imageurl != ''
+                                    ? userData.imageurl
+                                    : 'No details added.',
                         }}
                         size={80}
                     />
@@ -165,7 +169,7 @@ const ProfileScreen = ({navigation, route}) => {
                 </View>
             </View>
 
-            <View style={styles.menuWrapper}>
+            <ScrollView style={styles.menuWrapper}>
                 <TouchableRipple onPress={() => {}}>
                     <View style={styles.menuItem}>
                         <Icon
@@ -206,7 +210,24 @@ const ProfileScreen = ({navigation, route}) => {
                         <Text style={styles.menuItemText}>Settings</Text>
                     </View>
                 </TouchableRipple>
-            </View>
+                <TouchableRipple onPress={() => {
+                    signOut(auth).then(() => {
+                        storeData("email", "");
+                        storeData("password", "");
+                        storeData("username", "");
+                        navigation.navigate("Authentication")
+                    })
+                }}>
+                    <View style={styles.menuItem}>
+                        <Feather
+                            name="log-out"
+                            color={COLORS.black}
+                            size={25}
+                        />
+                        <Text style={styles.menuItemText}>Logout</Text>
+                    </View>
+                </TouchableRipple>
+            </ScrollView>
         </SafeAreaView>
     );
 };

@@ -70,8 +70,8 @@ const EditProfileScreen = ({navigation, route}) => {
                     phonenum: data.phone,
                     country: data.address,
                     imageurl: data.image,
-                }).then(()=>{
-                    storeData("username", name)
+                }).then(() => {
+                    storeData('username', name);
                 });
             }
             //console.log("haha")

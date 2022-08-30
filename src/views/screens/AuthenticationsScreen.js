@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StatusBar, StyleSheet, Dimensions, ToastAndroid} from 'react-native';
+import {
+    View,
+    Text,
+    StatusBar,
+    StyleSheet,
+    Dimensions,
+    ToastAndroid,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
 import * as Animatable from 'react-native-animatable';
@@ -13,54 +20,57 @@ export const AuthenticationScreen = ({navigation}) => {
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState(null);
 
-    useEffect(async ()=>{
+    useEffect(async () => {
         try {
-            setLoading(true)
-            const username = await retrieveData("username");
-            setUsername(username)
-            setLoading(false)
-        } catch(e) {
-            console.error(e)
-            setLoading(false)
+            setLoading(true);
+            const username = await retrieveData('username');
+            if (!!username && username != "")
+                setUsername(username);
+            else 
+                setUsername(null)
+            setLoading(false);
+        } catch (e) {
+            console.error(e);
+            setLoading(false);
         }
-    }, [])
-    
+    }, []);
+
     const handleSignIn = navigation => {
         if (!username) {
             return () => {
-                navigation.navigate("SignInScreen")
-            }
+                navigation.navigate('SignInScreen');
+            };
         }
         return async () => {
             try {
-            setLoading(true);
-            const email = await retrieveData('email');
-            const pass = await retrieveData('password');
+                setLoading(true);
+                const email = await retrieveData('email');
+                const pass = await retrieveData('password');
 
-            console.log("call", email, pass)
-            if (!email || !pass) {
-                throw "Didn't store any data"
-            }
+                console.log('call', email, pass);
+                if (!email || email == "" || !pass || pass == "") {
+                    throw "Didn't store any data";
+                }
 
-            await signInWithEmailAndPassword(auth, email, pass)
-                .then(() => {
-                    if (Platform.OS === 'android') {
-                        ToastAndroid.show(
-                            'Log in successfully',
-                            ToastAndroid.SHORT,
-                        );
-                    }
-                
-                    navigation.navigate('HomeScreen');
-                    setLoading(false)
-                })
-                .catch(() => {
-                    console.log("CAN'T SIGN IN");
-                    throw "can't sign in";
-                });
-            } catch(e) {
-                console.error(e)
-                setLoading(false)
+                await signInWithEmailAndPassword(auth, email, pass)
+                    .then(() => {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.show(
+                                'Log in successfully',
+                                ToastAndroid.SHORT,
+                            );
+                        }
+
+                        navigation.navigate('HomeScreen');
+                        setLoading(false);
+                    })
+                    .catch(() => {
+                        console.log("CAN'T SIGN IN");
+                        throw "can't sign in";
+                    });
+            } catch (e) {
+                console.error(e);
+                setLoading(false);
             }
         };
     };
@@ -116,7 +126,11 @@ export const AuthenticationScreen = ({navigation}) => {
                             loading={loading}
                             onPress={handleSignIn(navigation)}
                         >
-                            <Text style={style.textSign}>{!!username ? `Continue as "${username}"` : "Start"}</Text>
+                            <Text style={style.textSign}>
+                                {!!username
+                                    ? `Continue as "${username}"`
+                                    : 'Start'}
+                            </Text>
                             <MaterialIcons
                                 name="arrow-right"
                                 color="#fff"
@@ -125,14 +139,20 @@ export const AuthenticationScreen = ({navigation}) => {
                             />
                         </GradientButton>
                         {!!username && (
-                            <Button mode="text" uppercase={false} onPress={() => navigation.navigate("SignInScreen")}>
+                            <Button
+                                mode="text"
+                                uppercase={false}
+                                onPress={() =>
+                                    navigation.navigate('SignInScreen')
+                                }
+                            >
                                 <Text
                                     style={{
                                         fontSize: 13,
-                                        color: COLORS.grey
+                                        color: COLORS.grey,
                                     }}
                                 >
-                                    Login with other account 
+                                    Login with other account
                                 </Text>
                             </Button>
                         )}

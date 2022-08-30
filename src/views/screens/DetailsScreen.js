@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, updateDoc} from 'firebase/firestore';
+import {IMAGE_LOAD_FAILED} from '../../const';
 
 const DetailsScreen = ({navigation, route}) => {
     const pet = route.params;
@@ -45,7 +46,12 @@ const DetailsScreen = ({navigation, route}) => {
             <View style={{height: 400, backgroundColor: COLORS.background}}>
                 <ImageBackground
                     resizeMode="contain"
-                    source={{uri: pet?.imageurl}}
+                    source={{
+                        uri:
+                            !!pet && pet.imageurl != ''
+                                ? pet?.imageurl
+                                : IMAGE_LOAD_FAILED,
+                    }}
                     style={{
                         height: 280,
                         top: 20,
@@ -139,7 +145,12 @@ const DetailsScreen = ({navigation, route}) => {
                 {/* Render user image , name and date */}
                 <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
                     <Image
-                        source={{uri: pet?.userimageurl}}
+                        source={{
+                            uri:
+                                !!pet && pet.userimageurl != ''
+                                    ? pet?.userimageurl
+                                    : IMAGE_LOAD_FAILED,
+                        }}
                         style={{height: 40, width: 40, borderRadius: 20}}
                     />
                     <View style={{flex: 1, paddingLeft: 10}}>

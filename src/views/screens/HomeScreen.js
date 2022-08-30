@@ -20,7 +20,8 @@ import {onAuthStateChanged, RecaptchaVerifier} from 'firebase/auth';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, getDocs} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
-import {storeData, retrieveData} from '../../utils';
+import {storeData} from '../../utils';
+import {IMAGE_LOAD_FAILED} from '../../const';
 
 const petCategories = [
     {name: 'CATS', icon: 'cat'},
@@ -44,7 +45,12 @@ const Card = ({pet, navigation}) => {
                 {/* Render the card image */}
                 <View style={style.cardImageContainer}>
                     <Image
-                        source={{uri: pet.imageurl}}
+                        source={{
+                            uri:
+                                !!pet.imageurl && pet.imageurl != ''
+                                    ? pet.imageurl
+                                    : IMAGE_LOAD_FAILED,
+                        }}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -125,9 +131,9 @@ const HomeScreen = ({navigation}) => {
                 getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
                     docSnap => {
                         if (docSnap.exists()) {
-                            let data = docSnap.data()
+                            let data = docSnap.data();
                             setUserData(data);
-                            storeData("username", data.name);
+                            storeData('username', data.name);
                         } else {
                             console.log('No such document!');
                         }
@@ -202,11 +208,12 @@ const HomeScreen = ({navigation}) => {
         setFilteredPets(currentPets);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         getUser();
         getPets().then(() => {
             setSeletedCategoryIndex(0), fliterPet(0);
         });
+        return () => {}
     }, []);
 
     return (
@@ -227,17 +234,18 @@ const HomeScreen = ({navigation}) => {
                     {userData ? userData.name || 'No details added.' : ''}
                 </Text>
                 <Avatar.Image
-                    source={{
-                        uri: userData
-                            ? userData.imageurl || 'No details added.'
-                            : '',
-                    }}
+                    source={ 
+                        !!userData && userData.imageurl != ''
+                            ? { uri: userData.imageurl }
+                            : require('../../assets/default_avatar.png')
+                    }
                     size={40}
                 />
             </View>
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
                 showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
             >
                 <View style={style.mainContainer}>
                     {/* Render the search inputs and icons */}
@@ -306,6 +314,7 @@ const HomeScreen = ({navigation}) => {
                             contentInsetAdjustmentBehavior="automatic"
                             showsVerticalScrollIndicator={false}
                             data={filteredPets}
+                            scrollEnabled={false}
                             renderItem={({item}) => (
                                 <Card pet={item} navigation={navigation} />
                             )}

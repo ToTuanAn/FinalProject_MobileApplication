@@ -21,6 +21,7 @@ import pets from '../../const/pets';
 import {db, auth} from '../../../firebase';
 import {collection, getDocs, getDoc, doc, updateDoc} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
+import {IMAGE_LOAD_FAILED} from '../../const';
 
 const {height} = Dimensions.get('window');
 
@@ -34,7 +35,12 @@ const Card = ({pet, navigation}) => {
                 {/* Render the card image */}
                 <View style={styles.cardImageContainer}>
                     <Image
-                        source={{uri: pet.imageurl}}
+                        source={{
+                            uri:
+                                !!pet && pet.imageurl != ''
+                                    ? pet?.imageurl
+                                    : IMAGE_LOAD_FAILED,
+                        }}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -194,16 +200,27 @@ const FavoriteScreen = ({navigation, route}) => {
             </View>
             <StatusBar backgroundColor={'#e6acfa'} barStyle="light-content" />
 
-            <ScrollView contentInsetAdjustmentBehavior="automatic">
+            <ScrollView
+                contentInsetAdjustmentBehavior="automatic"
+                nestedScrollEnabled={true}
+            >
                 <View style={styles.listContainer}>
                     <View style={{marginTop: 20}}>
-                        <FlatList
-                            showsVerticalScrollIndicator={false}
-                            data={pets}
-                            renderItem={({item}) => (
-                                <Card pet={item} navigation={navigation} />
-                            )}
-                        />
+                        {/* <FlatList */}
+                        {/*     showsVerticalScrollIndicator={false} */}
+                        {/*     data={pets} */}
+                        {/*     scrollEnabled={false} */}
+                        {/*     renderItem={({item}) => ( */}
+                        {/*         <Card pet={item} navigation={navigation} /> */}
+                        {/*     )} */}
+                        {/* /> */}
+                        {pets.map((item, index) => (
+                            <Card
+                                key={index}
+                                pet={item}
+                                navigation={navigation}
+                            />
+                        ))}
                     </View>
                 </View>
             </ScrollView>
