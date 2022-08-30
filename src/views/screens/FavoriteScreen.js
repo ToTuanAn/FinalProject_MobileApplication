@@ -7,7 +7,6 @@ import {
     Dimensions,
     Image,
     TextInput,
-    FlatList,
     SafeAreaView,
     ScrollView,
 } from 'react-native';
@@ -206,14 +205,6 @@ const FavoriteScreen = ({navigation, route}) => {
             >
                 <View style={styles.listContainer}>
                     <View style={{marginTop: 20}}>
-                        {/* <FlatList */}
-                        {/*     showsVerticalScrollIndicator={false} */}
-                        {/*     data={pets} */}
-                        {/*     scrollEnabled={false} */}
-                        {/*     renderItem={({item}) => ( */}
-                        {/*         <Card pet={item} navigation={navigation} /> */}
-                        {/*     )} */}
-                        {/* /> */}
                         {pets.map((item, index) => (
                             <Card
                                 key={index}

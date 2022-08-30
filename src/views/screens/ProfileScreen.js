@@ -83,12 +83,11 @@ const ProfileScreen = ({navigation, route}) => {
             <View style={styles.userInfoSection}>
                 <View style={{flexDirection: 'row', marginTop: 15}}>
                     <Avatar.Image
-                        source={{
-                            uri:
-                                !!userData && userData.imageurl != ''
-                                    ? userData.imageurl
-                                    : 'No details added.',
-                        }}
+                        source={ 
+                            !!userData && userData.imageurl != ''
+                                ? { uri: userData.imageurl }
+                                : require('../../assets/default_avatar.png')
+                        }
                         size={80}
                     />
                     <View style={{marginLeft: 20}}>
