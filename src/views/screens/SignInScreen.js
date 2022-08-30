@@ -9,7 +9,7 @@ import {
     Platform,
     StatusBar,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,6 +19,7 @@ import {GradientButton} from '../../components';
 import {storeData, retrieveData} from '../../utils';
 
 const SignInScreen = ({navigation}) => {
+    const [isLoading, setIsLoading] = useState(null);
     const [data, setData] = React.useState({
         email: '',
         password: '',
@@ -67,6 +68,7 @@ const SignInScreen = ({navigation}) => {
                 return;
             }
 
+            setIsLoading(true)
             await signInWithEmailAndPassword(auth, data.email, data.password)
                 .then(userCredentials => {
                     const user = userCredentials.user;
@@ -79,9 +81,13 @@ const SignInScreen = ({navigation}) => {
                     storeData('email', data.email);
                     storeData('password', data.password);
 
+                    setIsLoading(false)
                     navigation.navigate('HomeScreen');
                 })
-                .catch(error => alert(error.message));
+                .catch(error => {
+                    setIsLoading(false)
+                    alert(error.message)
+                });
         };
     };
 
@@ -161,6 +167,7 @@ const SignInScreen = ({navigation}) => {
                 <View style={style.button}>
                     <GradientButton
                         style={style.signIn}
+                        loading={isLoading}
                         onPress={handleSignIn(navigation)}
                     >
                         <Text style={[style.textSign, {color: '#fff'}]}>

@@ -14,16 +14,47 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, updateDoc} from 'firebase/firestore';
+import {userConverter} from '../converters/User';
 import {IMAGE_LOAD_FAILED} from '../../const';
 import { ScrollView } from 'react-native-gesture-handler';
 import Easing from 'react-native/Libraries/Animated/Easing';
+import { ActivityIndicator } from 'react-native-paper';
+import {Avatar} from 'react-native-paper';
 
 const DetailsScreen = ({navigation, route}) => {
     const pet = route.params;
+    const [owner, setOwner] = useState(null)
     const user = auth.currentUser;
     const userDocRef = doc(db, 'users', user.uid);
     const [userFavor, setUserFavor] = useState([]);
     
+    const [isLoading, setIsLoading] = useState(false);
+    
+    useEffect(async ()=>{
+        try {
+            if (!!pet.ownerID) {
+                setIsLoading(true);
+                const docSnap = await getDoc(doc(db, 'users', pet.ownerID).withConverter(userConverter))
+                if (!docSnap.exists()) throw "docsnap not exists"
+                
+                const userInfo = docSnap.data();
+                const user = {
+                    username: userInfo.name,
+                    userimageurl: userInfo.imageurl,
+                    useraddress: userInfo.country,
+                    userphone: userInfo.phonenum,
+                    useremail: userInfo.email,
+                }
+                console.log(user);
+                setOwner(user);
+                setIsLoading(false)
+            }
+        } catch(e) {
+            console.error(e)
+            setIsLoading(false)
+        }
+    }, [])
+
     const offsetRef = useRef(new Animated.Value(400)).current;
 
     const changeOffset = (newValue) => {
@@ -52,13 +83,16 @@ const DetailsScreen = ({navigation, route}) => {
             }
         });
     };
+    
+    if (isLoading) return (
+        <View style={{width: '100%', height: '100%', justifyContent: 'center'}}>
+            <ActivityIndicator/>
+        </View>
+    )
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
             <StatusBar backgroundColor={COLORS.background} />
-           {/*  <Animated.View style={{height: offsetRef}}> */}
-           {/*      <Text>Hello</Text> */}
-           {/* </Animated.View> */}
             <Animated.View style={{height: offsetRef, backgroundColor: COLORS.background}}>
                 <ImageBackground
                     resizeMode="cover"
@@ -159,7 +193,7 @@ const DetailsScreen = ({navigation, route}) => {
                     flex: 1,
                 }}
             />
-            <ScrollView 
+            <ScrollView
                 onScroll={e => {
                     const offset = e.nativeEvent.contentOffset.y;
                     if (offset > 500) return
@@ -167,14 +201,13 @@ const DetailsScreen = ({navigation, route}) => {
                 }}>
                 {/* Render user image , name and date */}
                 <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
-                    <Image
-                        source={{
-                            uri:
-                                !!pet && pet.userimageurl != ''
-                                    ? pet?.userimageurl
-                                    : IMAGE_LOAD_FAILED,
-                        }}
-                        style={{height: 40, width: 40, borderRadius: 20}}
+                    <Avatar.Image
+                        source={ 
+                            !!owner && owner.userimageurl != ''
+                                ? { uri: owner.userimageurl }
+                                : require('../../assets/default_avatar.png')
+                        }
+                        size={40}
                     />
                     <View style={{flex: 1, paddingLeft: 10}}>
                         <Text
@@ -184,7 +217,7 @@ const DetailsScreen = ({navigation, route}) => {
                                 fontWeight: 'bold',
                             }}
                         >
-                            {pet?.username}
+                            {owner?.username}
                         </Text>
                         <Text
                             style={{
@@ -202,7 +235,7 @@ const DetailsScreen = ({navigation, route}) => {
                     </Text>
                 </View>
                 <Text style={style.comment}>{pet?.description}</Text>
-        {/* Render footer */}
+            {/* Render footer */}
             <View style={style.footer}>
                 <TouchableOpacity
                     style={style.iconCon}
@@ -212,7 +245,7 @@ const DetailsScreen = ({navigation, route}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={style.btn}
-                    onPress={() => navigation.navigate('InfoOwner', pet)}
+                    onPress={() => navigation.navigate('InfoOwner', {...pet, ...owner})}
                 >
                     <Text style={{color: COLORS.white, fontWeight: 'bold'}}>
                         ADOPTION
