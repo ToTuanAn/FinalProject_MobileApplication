@@ -43,12 +43,11 @@ export const InfoOwner = ({navigation, route}) => {
                 <View style={style.header}>
                     <Animatable.Image
                         animation="pulse"
-                        source={{
-                            uri:
-                                !!pet && pet.userimageurl != ''
-                                    ? pet?.userimageurl
-                                    : IMAGE_LOAD_FAILED,
-                        }}
+                        source={ 
+                            !!pet && pet.userimageurl != ''
+                                ? { uri: pet.userimageurl }
+                                : require('../../assets/default_avatar.png')
+                        }
                         style={{width: 170, height: 170, borderRadius: 400 / 2}}
                         resizeMode="stretch"
                     />

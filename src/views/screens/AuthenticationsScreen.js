@@ -54,13 +54,6 @@ export const AuthenticationScreen = ({navigation}) => {
 
                 await signInWithEmailAndPassword(auth, email, pass)
                     .then(() => {
-                        if (Platform.OS === 'android') {
-                            ToastAndroid.show(
-                                'Log in successfully',
-                                ToastAndroid.SHORT,
-                            );
-                        }
-
                         navigation.navigate('HomeScreen');
                         setLoading(false);
                     })

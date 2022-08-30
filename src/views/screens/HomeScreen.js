@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar} from 'react-native-paper';
+import {ActivityIndicator, Avatar} from 'react-native-paper';
 import {
     Dimensions,
     SafeAreaView,
@@ -22,6 +22,7 @@ import {userConverter} from '../converters/User';
 import {storeData} from '../../utils';
 import {IMAGE_LOAD_FAILED} from '../../const';
 import {Card} from '../../components';
+import { async } from '@firebase/util';
 
 const petCategories = [
     {name: 'CATS', icon: 'cat'},
@@ -36,14 +37,12 @@ const HomeScreen = ({navigation}) => {
     const [userData, setUserData] = useState(null);
     const [isloading, setIsLoading] = useState(null);
     const [pets, setPets] = useState([]);
-    //const [userFavor, setUserFavor] = useState(null);
-    //const [loading, setLoading] = useState(true);
 
     const getUser = async () => {
-        await onAuthStateChanged(auth, user => {
+        onAuthStateChanged(auth, async user => {
             if (user) {
                 const uid = user.uid;
-                getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
+                await getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
                     docSnap => {
                         if (docSnap.exists()) {
                             let data = docSnap.data();
@@ -63,50 +62,47 @@ const HomeScreen = ({navigation}) => {
             let list = [];
             let userInfo = {};
             const petsRef = collection(db, 'pets');
-            await getDocs(petsRef).then(async snapshot => {
-                snapshot.forEach(async document => {
-                    const {
-                        age,
-                        category,
-                        description,
-                        gender,
-                        imageurl,
-                        name,
-                        ownerID,
-                        type,
-                    } = document.data();
+            const snapshot = await getDocs(petsRef)
+            snapshot.forEach(async document => {
+                const {
+                    age,
+                    category,
+                    description,
+                    gender,
+                    imageurl,
+                    name,
+                    ownerID,
+                    type,
+                } = document.data();
 
-                    await getDoc(
-                        doc(db, 'users', ownerID).withConverter(userConverter),
-                    )
-                        .then(docSnap => {
-                            if (docSnap.exists()) {
-                                userInfo = docSnap.data();
-                            } else {
-                                console.log('No such document!');
-                            }
-                        })
-                        .then(() => {
-                            //console.log(userInfo)
-                            list.push({
-                                id: document.id,
-                                age,
-                                category,
-                                description,
-                                gender,
-                                imageurl,
-                                name,
-                                ownerID,
-                                type,
-                                username: userInfo.name,
-                                userimageurl: userInfo.imageurl,
-                                useraddress: userInfo.country,
-                                userphone: userInfo.phonenum,
-                                useremail: userInfo.email,
-                            });
-                        });
+                // const docSnap = await getDoc(
+                //     doc(db, 'users', ownerID).withConverter(userConverter),
+                // )
+                // if (docSnap.exists()) {
+                //     userInfo = docSnap.data();
+                // } else {
+                //     console.log('No such document!');
+                //     return
+                // }
+
+                list.push({
+                    id: document.id,
+                    age,
+                    category,
+                    description,
+                    gender,
+                    imageurl,
+                    name,
+                    ownerID,
+                    type,
+                    // username: userInfo.name,
+                    // userimageurl: userInfo.imageurl,
+                    // useraddress: userInfo.country,
+                    // userphone: userInfo.phonenum,
+                    // useremail: userInfo.email,
                 });
             });
+            console.log(list)
 
             setPets(list);
         } catch (e) {
@@ -115,21 +111,34 @@ const HomeScreen = ({navigation}) => {
     };
 
     const fliterPet = index => {
-        //console.log(pets)
         const currentPets = pets.filter(
             item => item?.category?.toUpperCase() == petCategories[index].name,
         );
-        //console.log(currentPets)
         setFilteredPets(currentPets);
     };
 
-    useEffect(() => {
-        getUser();
-        getPets().then(() => {
-            setSeletedCategoryIndex(0), fliterPet(0);
-        });
+    useEffect(async () => {
+        try {
+            setIsLoading(true);
+            await getUser();
+            await getPets()
+            setIsLoading(false)
+        } catch(e) {
+            console.error(e)
+            setIsLoading(false)
+        }
         return () => {}
     }, []);
+
+    useEffect(()=>{
+        fliterPet(selectedCategoryIndex);
+    }, [pets, selectedCategoryIndex])
+
+    if (isloading) return (
+        <View style={{width: '100%', height: '100%', justifyContent: 'center'}}>
+            <ActivityIndicator/>
+        </View>
+    )
 
     return (
         <SafeAreaView style={{flex: 1, color: COLORS.white}}>
