@@ -20,6 +20,7 @@ import {onAuthStateChanged, RecaptchaVerifier} from 'firebase/auth';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, getDocs} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
+import {storeData, retrieveData} from '../../utils';
 
 const petCategories = [
     {name: 'CATS', icon: 'cat'},
@@ -124,9 +125,9 @@ const HomeScreen = ({navigation}) => {
                 getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
                     docSnap => {
                         if (docSnap.exists()) {
-                            setUserData(docSnap.data());
-                            //setUserFavor(docSnap.data().favoritepets);
-                            //return docSnap.data();
+                            let data = docSnap.data()
+                            setUserData(data);
+                            storeData("username", data.name);
                         } else {
                             console.log('No such document!');
                         }

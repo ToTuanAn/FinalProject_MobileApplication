@@ -65,6 +65,10 @@ const SignUpScreen = ({navigation}) => {
                             ToastAndroid.SHORT,
                         );
                     }
+
+                    storeData('email', data.email);
+                    storeData('password', data.password);
+
                     navigation.navigate('HomeScreen');
                 })
                 .catch(error => alert(error));
