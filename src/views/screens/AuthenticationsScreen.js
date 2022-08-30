@@ -102,7 +102,7 @@ export const AuthenticationScreen = ({navigation}) => {
                             },
                         ]}
                     >
-                        SaiGon Pet Adoption
+                        Your Pets Friend
                     </Text>
                     <Text
                         style={{
@@ -111,7 +111,7 @@ export const AuthenticationScreen = ({navigation}) => {
                             marginTop: 15,
                         }}
                     >
-                        Find your new best friend
+                        Find your new buddy
                     </Text>
                     <View style={style.button}>
                         <GradientButton
