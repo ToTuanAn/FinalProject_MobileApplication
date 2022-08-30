@@ -56,15 +56,6 @@ const AddPetScreen = ({navigation, route}) => {
     const {setPetImg, addPetPublishing, control, handleAddPetFormSubmit} =
         useAddPet();
 
-    // submit all information of the pet
-    // const onSubmit = (data) => {
-    //   data["image"] = image;
-    //   // do some api here
-    //   console.log(data, "data");
-    //   Alert.alert("Add succesfully")
-    //   navigation.goBack();
-    // };
-
     const openGalery = () => {
         ImagePicker.openPicker({
             width: 300,

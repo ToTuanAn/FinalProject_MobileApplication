@@ -5,7 +5,6 @@ import {
     SafeAreaView,
     StatusBar,
     View,
-    Image,
     StyleSheet,
     TouchableOpacity,
     Animated
@@ -17,9 +16,8 @@ import {collection, addDoc, getDoc, doc, updateDoc} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
 import {IMAGE_LOAD_FAILED} from '../../const';
 import { ScrollView } from 'react-native-gesture-handler';
-import Easing from 'react-native/Libraries/Animated/Easing';
-import { ActivityIndicator } from 'react-native-paper';
 import {Avatar} from 'react-native-paper';
+import {Loading} from '../../components';
 
 const DetailsScreen = ({navigation, route}) => {
     const pet = route.params;
@@ -85,9 +83,7 @@ const DetailsScreen = ({navigation, route}) => {
     };
     
     if (isLoading) return (
-        <View style={{width: '100%', height: '100%', justifyContent: 'center'}}>
-            <ActivityIndicator/>
-        </View>
+        <Loading/>
     )
 
     return (
