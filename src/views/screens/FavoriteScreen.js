@@ -21,7 +21,6 @@ import {db, auth} from '../../../firebase';
 import {collection, getDocs, getDoc, doc, updateDoc} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
 import {IMAGE_LOAD_FAILED} from '../../const';
-
 const {height} = Dimensions.get('window');
 
 const Card = ({pet, navigation}) => {

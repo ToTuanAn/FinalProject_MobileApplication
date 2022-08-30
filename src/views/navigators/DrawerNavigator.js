@@ -20,6 +20,7 @@ import {userConverter} from '../converters/User';
 import {onAuthStateChanged} from 'firebase/auth';
 import FavoriteScreen from '../screens/FavoriteScreen';
 import {IMAGE_LOAD_FAILED} from '../../const';
+import DonateScreen from '../screens/DonateScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -178,7 +179,7 @@ const DrawerNavigator = () => {
             >
                 {props => (
                     <DrawerScreenContainer>
-                        <HomeScreen {...props} />
+                        <DonateScreen {...props} />
                     </DrawerScreenContainer>
                 )}
             </Drawer.Screen>

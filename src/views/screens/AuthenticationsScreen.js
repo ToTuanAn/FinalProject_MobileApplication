@@ -223,19 +223,21 @@ const style = StyleSheet.create({
         marginTop: 30,
     },
     start: {
-        width: '70%',
-        height: 50,
+        width: '80%',
+        height: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
         flexDirection: 'row',
+
     },
     textSign: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 20,
         marginRight: 10,
-    },
+        textAlign: 'center',
+    }
 });
 
 export default AuthenticationScreen;

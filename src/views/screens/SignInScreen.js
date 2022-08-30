@@ -8,6 +8,7 @@ import {
     View,
     Platform,
     StatusBar,
+    TouchableHighlight
 } from 'react-native';
 import React, {useEffect} from 'react';
 import * as Animatable from 'react-native-animatable';
@@ -157,7 +158,16 @@ const SignInScreen = ({navigation}) => {
                             <Feather name="eye" color="grey" size={20} />
                         )}
                     </TouchableOpacity>
+                    
                 </View>
+                <TouchableHighlight style ={{marginTop : -2}}>
+                        <Text style = {{
+                            fontSize : 13,
+                            fontStyle : 'underline',
+                            color : 'blue'
+                        }}> Forgot your password ?</Text>
+
+                </TouchableHighlight>
                 <View style={style.button}>
                     <GradientButton
                         style={style.signIn}
@@ -167,6 +177,10 @@ const SignInScreen = ({navigation}) => {
                             Sign In
                         </Text>
                     </GradientButton>
+                    
+
+                    
+
                 </View>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('SignUpScreen')}
