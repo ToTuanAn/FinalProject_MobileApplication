@@ -10,7 +10,7 @@ import {
     StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React from 'react';
+import React, {useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -22,6 +22,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {GradientButton} from '../../components';
 
 const SignUpScreen = ({navigation}) => {
+    const [isLoading, setIsLoading] = useState(null);
     const [data, setData] = React.useState({
         email: '',
         password: '',
@@ -35,6 +36,7 @@ const SignUpScreen = ({navigation}) => {
 
     const handleSignUp = navigation => {
         return async dispatch => {
+            setIsLoading(true)
             await createUserWithEmailAndPassword(
                 auth,
                 data.email,
@@ -68,10 +70,14 @@ const SignUpScreen = ({navigation}) => {
 
                     storeData('email', data.email);
                     storeData('password', data.password);
-
+    
+                    setIsLoading(false)
                     navigation.navigate('HomeScreen');
                 })
-                .catch(error => alert(error));
+                .catch(error => {
+                    setIsLoading(false);
+                    alert(error)
+                });
         };
     };
 
@@ -244,6 +250,7 @@ const SignUpScreen = ({navigation}) => {
                     </View>
                     <GradientButton
                         style={[style.button, style.signIn]}
+                        loading={isLoading}
                         onPress={handleSignUp(navigation)}
                     >
                         <Text style={[style.textSign, {color: '#fff'}]}>
