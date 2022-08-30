@@ -45,7 +45,7 @@ const DonateScreen = ({navigation}) => {
         <Animatable.Image
             animation="pulse"
             interationCount="infinite"
-            source={require('../../assets/donate3.png')}
+            source={require('../../assets/donate3.jpg')}
             style={{width: 320, height: 280, borderRadius: 250}}
             resizeMode="stretch"
     
