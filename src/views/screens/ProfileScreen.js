@@ -22,7 +22,6 @@ import {storeData, retrieveData} from '../../utils';
 
 const ProfileScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState(null);
-    //const [loading, setLoading] = useState(true);
 
     const getUser = async () => {
         await onAuthStateChanged(auth, user => {
@@ -32,9 +31,6 @@ const ProfileScreen = ({navigation, route}) => {
                     docSnap => {
                         if (docSnap.exists()) {
                             setUserData(docSnap.data());
-                            //console.log(userData)
-
-                            //return docSnap.data();
                         } else {
                             console.log('No such document!');
                         }
@@ -46,7 +42,6 @@ const ProfileScreen = ({navigation, route}) => {
 
     useEffect(() => {
         getUser();
-        //fetchPosts();
     });
 
     const shareApp = async () => {

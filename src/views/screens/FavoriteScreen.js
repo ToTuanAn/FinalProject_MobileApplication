@@ -13,176 +13,84 @@ import {
 import React, {useState, useEffect} from 'react';
 import COLORS from '../../const/colors';
 import * as Animatable from 'react-native-animatable';
-import {GradientButton} from '../../components';
+import {GradientButton, Loading} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import pets from '../../const/pets';
 import {db, auth} from '../../../firebase';
 import {collection, getDocs, getDoc, doc, updateDoc} from 'firebase/firestore';
+
+import {Card} from '../../components';
+import { ActivityIndicator } from 'react-native-paper';
 import {userConverter} from '../converters/User';
 import {IMAGE_LOAD_FAILED} from '../../const';
+
 const {height} = Dimensions.get('window');
-
-const Card = ({pet, navigation}) => {
-    return (
-        <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('DetailsScreen', pet)}
-        >
-            <View style={styles.cardContainer}>
-                {/* Render the card image */}
-                <View style={styles.cardImageContainer}>
-                    <Image
-                        source={{
-                            uri:
-                                !!pet && pet.imageurl != ''
-                                    ? pet?.imageurl
-                                    : IMAGE_LOAD_FAILED,
-                        }}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            resizeMode: 'contain',
-                        }}
-                    />
-                </View>
-
-                {/* Render all the card details here */}
-                <View style={styles.cardDetailsContainer}>
-                    {/* Name and gender icon */}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                color: COLORS.dark,
-                                fontSize: 20,
-                            }}
-                        >
-                            {pet?.name}
-                        </Text>
-                        <Icon
-                            name="gender-male"
-                            size={22}
-                            color={COLORS.grey}
-                        />
-                    </View>
-
-                    {/* Render the age and type */}
-                    <Text
-                        style={{fontSize: 12, marginTop: 5, color: COLORS.dark}}
-                    >
-                        {pet?.type}
-                    </Text>
-                    <Text
-                        style={{fontSize: 10, marginTop: 5, color: COLORS.grey}}
-                    >
-                        {pet?.age}
-                    </Text>
-
-                    {/* Render distance and the icon */}
-                    <View style={{marginTop: 5, flexDirection: 'row'}}>
-                        <Icon
-                            name="map-marker"
-                            color={COLORS.primary}
-                            size={18}
-                        />
-                        <Text
-                            style={{
-                                fontSize: 12,
-                                color: COLORS.grey,
-                                marginLeft: 5,
-                            }}
-                        >
-                            address
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-};
 
 const FavoriteScreen = ({navigation, route}) => {
     const [userFavor, setUserFavor] = useState([]);
     const [pets, setPets] = useState([]);
+    const [isLoading, setIsLoading] = useState(null);
 
     const getPets = async () => {
+        setIsLoading(true)
         const user = auth.currentUser;
         const userDocRef = doc(db, 'users', user.uid);
-        let favorlist;
-        await getDoc(userDocRef).then(docSnap => {
-            favorlist = docSnap.data().favoritepets;
-            setUserFavor(docSnap.data().favoritepets);
-        });
-        //const favorlist = [...userFavor]
-        console.log(favorlist);
+        let docSnap = await getDoc(userDocRef);
+        const favorList = docSnap.data().favoritepets;
+        setUserFavor(favorList);
+        
+        const petsRef = collection(db, 'pets');
+        const pets = await getDocs(petsRef)
+                
         try {
-            let list = [];
+            let list = []
+            
+            pets.forEach(async document => {
+                if (favorList.indexOf(document.id) <= -1) return 
+                const {
+                    age,
+                    category,
+                    description,
+                    gender,
+                    imageurl,
+                    name,
+                    ownerID,
+                    type,
+                } = document.data();
 
-            for (var i in favorlist) {
-                const favor = favorlist[i];
-                await getDoc(doc(db, 'pets', favor)).then(async document => {
-                    const {
-                        age,
-                        category,
-                        description,
-                        gender,
-                        imageurl,
-                        name,
-                        ownerID,
-                        type,
-                    } = document.data();
-                    let userInfo = {};
 
-                    await getDoc(
-                        doc(db, 'users', ownerID).withConverter(userConverter),
-                    ).then(async docSnap => {
-                        if (docSnap.exists()) {
-                            userInfo = docSnap.data();
-
-                            list.push({
-                                id: favor,
-                                age,
-                                category,
-                                description,
-                                gender,
-                                imageurl,
-                                name,
-                                ownerID,
-                                type,
-                                username: userInfo.name,
-                                userimageurl: userInfo.imageurl,
-                                useraddress: userInfo.country,
-                                userphone: userInfo.phonenum,
-                                useremail: userInfo.email,
-                            });
-                        }
-                    });
+                list.push({
+                    id: document.id,
+                    age,
+                    category,
+                    description,
+                    gender,
+                    imageurl,
+                    name,
+                    ownerID,
+                    type,
                 });
-            }
+            });
+            
             setPets(list);
+            setIsLoading(false)
         } catch (e) {
             console.log(e);
+            setIsLoading(false)
         }
     };
 
     useEffect(() => {
-        getPets().then(() => {
-            console.log(pets);
-        });
-        //console.log(pets)
+        getPets()
     }, []);
 
-    // useEffect(()=>{
-    //   getPets().then((list) => {setPets(list)});
-    //   console.log(pets)
-    // }, [])
-
+    if (isLoading) return (
+        <View style={{width: '100%', height: '100%', justifyContent: 'center'}}>
+            <ActivityIndicator/>
+        </View>
+    )
+    
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>

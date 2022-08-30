@@ -33,22 +33,24 @@ const EditProfileScreen = ({navigation, route}) => {
             width: 150,
             height: 150,
             cropping: true,
+            includeBase64: true,
         }).then(image => {
-            console.log(image);
-            setImage(image.path);
+            const uri = `data:${image.mime};base64,${image.data}`;
+            setImage(uri);
         });
     };
 
     const {handleSubmit, control} = useForm();
 
-    const getUser = async () => {
-        await onAuthStateChanged(auth, user => {
+    const getUser = () => onAuthStateChanged(auth, async user => {
             if (user) {
                 const uid = user.uid;
-                getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
+                await getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
                     docSnap => {
                         if (docSnap.exists()) {
-                            setUserData(docSnap.data());
+                            let data = docSnap.data();
+                            setUserData(data);
+                            storeData('username', data.name);
                         } else {
                             console.log('No such document!');
                         }
@@ -56,10 +58,8 @@ const EditProfileScreen = ({navigation, route}) => {
                 );
             }
         });
-    };
 
-    const changeUserInfo = async data => {
-        await onAuthStateChanged(auth, user => {
+    const changeUserInfo = data => onAuthStateChanged(auth, user => {
             if (user) {
                 const uid = user.uid;
 
@@ -76,11 +76,10 @@ const EditProfileScreen = ({navigation, route}) => {
             }
             //console.log("haha")
         });
-    };
 
     useEffect(() => {
         getUser();
-    }, [userData]);
+    }, []);
 
     const onSubmit = data => {
         //data.append("image",image.path)

@@ -23,6 +23,7 @@ import {storeData} from '../../utils';
 import {IMAGE_LOAD_FAILED} from '../../const';
 import {Card} from '../../components';
 import { async } from '@firebase/util';
+import {Loading} from '../../components';
 
 const petCategories = [
     {name: 'CATS', icon: 'cat'},
@@ -38,7 +39,7 @@ const HomeScreen = ({navigation}) => {
     const [isloading, setIsLoading] = useState(null);
     const [pets, setPets] = useState([]);
 
-    const getUser = async () => {
+    const getUser = () => {
         onAuthStateChanged(auth, async user => {
             if (user) {
                 const uid = user.uid;
@@ -135,9 +136,7 @@ const HomeScreen = ({navigation}) => {
     }, [pets, selectedCategoryIndex])
 
     if (isloading) return (
-        <View style={{width: '100%', height: '100%', justifyContent: 'center'}}>
-            <ActivityIndicator/>
-        </View>
+        <Loading/>
     )
 
     return (

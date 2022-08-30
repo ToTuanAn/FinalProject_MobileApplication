@@ -41,7 +41,8 @@ export const Card = ({pet, navigation}) => {
                         style={{
                             width: '100%',
                             height: '100%',
-                            resizeMode: 'contain',
+                            resizeMode: 'cover',
+                            borderRadius: 20
                         }}
                     />
                 </View>
