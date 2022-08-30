@@ -13,6 +13,7 @@ import * as Animatable from 'react-native-animatable';
 import {GradientButton} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {IMAGE_LOAD_FAILED} from '../../const';
 
 export const InfoOwner = ({navigation, route}) => {
     const pet = route.params;
@@ -43,7 +44,10 @@ export const InfoOwner = ({navigation, route}) => {
                     <Animatable.Image
                         animation="pulse"
                         source={{
-                            uri: pet?.userimageurl,
+                            uri:
+                                !!pet && pet.userimageurl != ''
+                                    ? pet?.userimageurl
+                                    : IMAGE_LOAD_FAILED,
                         }}
                         style={{width: 170, height: 170, borderRadius: 400 / 2}}
                         resizeMode="stretch"

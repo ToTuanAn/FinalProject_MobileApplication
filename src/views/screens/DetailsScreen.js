@@ -1,4 +1,4 @@
-import React, {useState, setState, useEffect} from 'react';
+import React, {useState, setState, useEffect, useRef} from 'react';
 import {
     Text,
     ImageBackground,
@@ -8,17 +8,32 @@ import {
     Image,
     StyleSheet,
     TouchableOpacity,
+    Animated
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import COLORS from '../../const/colors';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, updateDoc} from 'firebase/firestore';
+import {IMAGE_LOAD_FAILED} from '../../const';
+import { ScrollView } from 'react-native-gesture-handler';
+import Easing from 'react-native/Libraries/Animated/Easing';
 
 const DetailsScreen = ({navigation, route}) => {
     const pet = route.params;
     const user = auth.currentUser;
     const userDocRef = doc(db, 'users', user.uid);
     const [userFavor, setUserFavor] = useState([]);
+    const [contentOffset, setContentOffset] = useState(0);
+    
+    const offsetRef = useRef(new Animated.Value(400)).current;
+
+    const changeOffset = (newValue) => {
+        Animated.timing(offsetRef, {
+            toValue: newValue,
+            duration: 10,
+            useNativeDriver: false,
+        }).start();
+    }
 
     const handleFavorite = () => {
         getDoc(userDocRef).then(docSnap => {
@@ -42,12 +57,20 @@ const DetailsScreen = ({navigation, route}) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
             <StatusBar backgroundColor={COLORS.background} />
-            <View style={{height: 400, backgroundColor: COLORS.background}}>
+           {/*  <Animated.View style={{height: offsetRef}}> */}
+           {/*      <Text>Hello</Text> */}
+           {/* </Animated.View> */}
+            <Animated.View style={{height: offsetRef, backgroundColor: COLORS.background}}>
                 <ImageBackground
-                    resizeMode="contain"
-                    source={{uri: pet?.imageurl}}
+                    resizeMode="cover"
+                    source={{
+                        uri:
+                            !!pet && pet.imageurl != ''
+                                ? pet?.imageurl
+                                : IMAGE_LOAD_FAILED,
+                    }}
                     style={{
-                        height: 280,
+                        height: '100%',
                         top: 20,
                     }}
                 >
@@ -67,65 +90,67 @@ const DetailsScreen = ({navigation, route}) => {
                     </View>
                 </ImageBackground>
 
-                <View style={style.detailsContainer}>
-                    {/* Pet name and gender icon */}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Text
+                <View style={style.wrapper}>
+                    <View style={style.detailsContainer}>
+                        {/* Pet name and gender icon */}
+                        <View
                             style={{
-                                fontSize: 20,
-                                color: COLORS.dark,
-                                fontWeight: 'bold',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
                             }}
                         >
-                            {pet.name}
-                        </Text>
-                        <Icon
-                            name="gender-male"
-                            size={25}
-                            color={COLORS.grey}
-                        />
-                    </View>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    color: COLORS.dark,
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {pet.name}
+                            </Text>
+                            <Icon
+                                name="gender-male"
+                                size={25}
+                                color={COLORS.grey}
+                            />
+                        </View>
 
-                    {/* Render Pet type and age */}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            marginTop: 5,
-                        }}
-                    >
-                        <Text style={{fontSize: 12, color: COLORS.dark}}>
-                            {pet.type}
-                        </Text>
-                        <Text style={{fontSize: 13, color: COLORS.dark}}>
-                            {pet.age} years old
-                        </Text>
-                    </View>
-
-                    {/* Render location and icon */}
-                    <View style={{marginTop: 5, flexDirection: 'row'}}>
-                        <Icon
-                            name="map-marker"
-                            color={COLORS.primary}
-                            size={20}
-                        />
-                        <Text
+                        {/* Render Pet type and age */}
+                        <View
                             style={{
-                                fontSize: 14,
-                                color: COLORS.grey,
-                                marginLeft: 5,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                marginTop: 5,
                             }}
                         >
-                            {pet?.useraddress}
-                        </Text>
+                            <Text style={{fontSize: 12, color: COLORS.dark}}>
+                                {pet.type}
+                            </Text>
+                            <Text style={{fontSize: 13, color: COLORS.dark}}>
+                                {pet.age} years old
+                            </Text>
+                        </View>
+
+                        {/* Render location and icon */}
+                        <View style={{marginTop: 5, flexDirection: 'row'}}>
+                            <Icon
+                                name="map-marker"
+                                color={COLORS.primary}
+                                size={20}
+                            />
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: COLORS.grey,
+                                    marginLeft: 5,
+                                }}
+                            >
+                                {pet?.useraddress}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </Animated.View>
 
             {/* Comment container */}
             <View
@@ -135,11 +160,21 @@ const DetailsScreen = ({navigation, route}) => {
                     flex: 1,
                 }}
             />
-            <View>
+            <ScrollView 
+                onScroll={e => {
+                    const offset = e.nativeEvent.contentOffset.y;
+                    if (offset > 250) return
+                    changeOffset(400 - offset);
+                }}>
                 {/* Render user image , name and date */}
                 <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
                     <Image
-                        source={{uri: pet?.userimageurl}}
+                        source={{
+                            uri:
+                                !!pet && pet.userimageurl != ''
+                                    ? pet?.userimageurl
+                                    : IMAGE_LOAD_FAILED,
+                        }}
                         style={{height: 40, width: 40, borderRadius: 20}}
                     />
                     <View style={{flex: 1, paddingLeft: 10}}>
@@ -168,9 +203,7 @@ const DetailsScreen = ({navigation, route}) => {
                     </Text>
                 </View>
                 <Text style={style.comment}>{pet?.description}</Text>
-            </View>
-
-            {/* Render footer */}
+        {/* Render footer */}
             <View style={style.footer}>
                 <TouchableOpacity
                     style={style.iconCon}
@@ -187,7 +220,10 @@ const DetailsScreen = ({navigation, route}) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+
+            </ScrollView>
+
+                    </SafeAreaView>
     );
 };
 
@@ -197,10 +233,17 @@ const style = StyleSheet.create({
         backgroundColor: COLORS.white,
         marginHorizontal: 20,
         flex: 1,
-        bottom: -60,
         borderRadius: 18,
         elevation: 10,
         padding: 20,
+        justifyContent: 'center',
+    },
+    wrapper: {
+        position: 'absolute',
+        height: 120,
+        width: '100%',
+        flex: 1,
+        bottom: -60,
         justifyContent: 'center',
     },
     comment: {

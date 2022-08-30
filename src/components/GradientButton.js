@@ -1,8 +1,9 @@
 import React, {PropsWithChildren} from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import COLORS from '../const/colors';
 
-export const GradientButton = ({style, onPress, children}) => {
+export const GradientButton = ({style, loading, onPress, children}) => {
     return (
         <TouchableOpacity style={style} onPress={onPress}>
             <LinearGradient
@@ -11,7 +12,11 @@ export const GradientButton = ({style, onPress, children}) => {
                 colors={['#9F21FD', '#01ab9d']}
                 style={gradientButtonStyle.linearGradient}
             >
-                {children}
+                {loading ? (
+                    <ActivityIndicator size="small" color={COLORS.secondary} />
+                ) : (
+                    children
+                )}
             </LinearGradient>
         </TouchableOpacity>
     );

@@ -20,6 +20,7 @@ import {db, auth} from '../../../firebase';
 import {doc, getDoc, setDoc, updateDoc} from 'firebase/firestore';
 import {onAuthStateChanged} from 'firebase/auth';
 import {userConverter} from '../converters/User';
+import {storeData, retrieveData} from '../../utils';
 
 const EditProfileScreen = ({navigation, route}) => {
     const [image, setImage] = useState(
@@ -63,11 +64,14 @@ const EditProfileScreen = ({navigation, route}) => {
                 const uid = user.uid;
 
                 const userDocRef = doc(db, 'users', uid);
+                const name = data.lastName + ' ' + data.firstName;
                 updateDoc(userDocRef, {
-                    name: data.lastName + ' ' + data.firstName,
+                    name,
                     phonenum: data.phone,
                     country: data.address,
                     imageurl: data.image,
+                }).then(() => {
+                    storeData('username', name);
                 });
             }
             //console.log("haha")

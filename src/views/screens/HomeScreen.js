@@ -8,7 +8,6 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    FlatList,
     ScrollView,
     StyleSheet,
 } from 'react-native';
@@ -20,6 +19,9 @@ import {onAuthStateChanged, RecaptchaVerifier} from 'firebase/auth';
 import {db, auth} from '../../../firebase';
 import {collection, addDoc, getDoc, doc, getDocs} from 'firebase/firestore';
 import {userConverter} from '../converters/User';
+import {storeData} from '../../utils';
+import {IMAGE_LOAD_FAILED} from '../../const';
+import {Card} from '../../components';
 
 const petCategories = [
     {name: 'CATS', icon: 'cat'},
@@ -27,86 +29,6 @@ const petCategories = [
     {name: 'BIRDS', icon: 'ladybug'},
     {name: 'BUNNIES', icon: 'rabbit'},
 ];
-
-const Card = ({pet, navigation}) => {
-    let icon_name = 'gender-male';
-    if (!pet.gender) {
-        icon_name = 'gender-female';
-    }
-
-    return (
-        <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('DetailsScreen', pet)}
-        >
-            <View style={style.cardContainer}>
-                {/* Render the card image */}
-                <View style={style.cardImageContainer}>
-                    <Image
-                        source={{uri: pet.imageurl}}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            resizeMode: 'contain',
-                        }}
-                    />
-                </View>
-
-                {/* Render all the card details here */}
-                <View style={style.cardDetailsContainer}>
-                    {/* Name and gender icon */}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: 'bold',
-                                color: COLORS.dark,
-                                fontSize: 20,
-                            }}
-                        >
-                            {pet?.name}
-                        </Text>
-                        <Icon name={icon_name} size={22} color={COLORS.grey} />
-                    </View>
-
-                    {/* Render the age and type */}
-                    <Text
-                        style={{fontSize: 12, marginTop: 5, color: COLORS.dark}}
-                    >
-                        {pet?.type}
-                    </Text>
-                    <Text
-                        style={{fontSize: 10, marginTop: 5, color: COLORS.grey}}
-                    >
-                        {pet?.age} years old
-                    </Text>
-
-                    {/* Render distance and the icon */}
-                    <View style={{marginTop: 5, flexDirection: 'row'}}>
-                        <Icon
-                            name="map-marker"
-                            color={COLORS.primary}
-                            size={18}
-                        />
-                        <Text
-                            style={{
-                                fontSize: 12,
-                                color: COLORS.grey,
-                                marginLeft: 5,
-                            }}
-                        >
-                            {pet?.useraddress}
-                        </Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-};
 
 const HomeScreen = ({navigation}) => {
     const [selectedCategoryIndex, setSeletedCategoryIndex] = React.useState(0);
@@ -124,9 +46,9 @@ const HomeScreen = ({navigation}) => {
                 getDoc(doc(db, 'users', uid).withConverter(userConverter)).then(
                     docSnap => {
                         if (docSnap.exists()) {
-                            setUserData(docSnap.data());
-                            //setUserFavor(docSnap.data().favoritepets);
-                            //return docSnap.data();
+                            let data = docSnap.data();
+                            setUserData(data);
+                            storeData('username', data.name);
                         } else {
                             console.log('No such document!');
                         }
@@ -201,11 +123,12 @@ const HomeScreen = ({navigation}) => {
         setFilteredPets(currentPets);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         getUser();
         getPets().then(() => {
             setSeletedCategoryIndex(0), fliterPet(0);
         });
+        return () => {}
     }, []);
 
     return (
@@ -226,17 +149,18 @@ const HomeScreen = ({navigation}) => {
                     {userData ? userData.name || 'No details added.' : ''}
                 </Text>
                 <Avatar.Image
-                    source={{
-                        uri: userData
-                            ? userData.imageurl || 'No details added.'
-                            : '',
-                    }}
+                    source={ 
+                        !!userData && userData.imageurl != ''
+                            ? { uri: userData.imageurl }
+                            : require('../../assets/default_avatar.png')
+                    }
                     size={40}
                 />
             </View>
             <ScrollView
                 contentInsetAdjustmentBehavior="automatic"
                 showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
             >
                 <View style={style.mainContainer}>
                     {/* Render the search inputs and icons */}
@@ -301,14 +225,11 @@ const HomeScreen = ({navigation}) => {
 
                     {/* Render the cards with flatlist */}
                     <View style={{marginTop: 20}}>
-                        <FlatList
-                            contentInsetAdjustmentBehavior="automatic"
-                            showsVerticalScrollIndicator={false}
-                            data={filteredPets}
-                            renderItem={({item}) => (
-                                <Card pet={item} navigation={navigation} />
-                            )}
-                        />
+                        {
+                            filteredPets.map((item, index) => (
+                                <Card key={index} pet={item} navigation={navigation} />
+                            ))
+                        }
                     </View>
                 </View>
             </ScrollView>

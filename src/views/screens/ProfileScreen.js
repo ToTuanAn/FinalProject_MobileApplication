@@ -13,9 +13,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 import COLORS from '../../const/colors';
 import {collection, addDoc, getDoc, doc} from 'firebase/firestore';
+import { signOut } from "firebase/auth";
 import {db, auth} from '../../../firebase';
 import {userConverter} from '../converters/User';
 import {onAuthStateChanged} from 'firebase/auth';
+import {ScrollView} from 'react-native-gesture-handler';
+import {storeData, retrieveData} from '../../utils';
 
 const ProfileScreen = ({navigation, route}) => {
     const [userData, setUserData] = useState(null);
@@ -80,11 +83,11 @@ const ProfileScreen = ({navigation, route}) => {
             <View style={styles.userInfoSection}>
                 <View style={{flexDirection: 'row', marginTop: 15}}>
                     <Avatar.Image
-                        source={{
-                            uri: userData
-                                ? userData.imageurl || 'No details added.'
-                                : '',
-                        }}
+                        source={ 
+                            !!userData && userData.imageurl != ''
+                                ? { uri: userData.imageurl }
+                                : require('../../assets/default_avatar.png')
+                        }
                         size={80}
                     />
                     <View style={{marginLeft: 20}}>
@@ -165,7 +168,7 @@ const ProfileScreen = ({navigation, route}) => {
                 </View>
             </View>
 
-            <View style={styles.menuWrapper}>
+            <ScrollView style={styles.menuWrapper}>
                 <TouchableRipple onPress={() => {}}>
                     <View style={styles.menuItem}>
                         <Icon
@@ -206,7 +209,24 @@ const ProfileScreen = ({navigation, route}) => {
                         <Text style={styles.menuItemText}>Settings</Text>
                     </View>
                 </TouchableRipple>
-            </View>
+                <TouchableRipple onPress={() => {
+                    signOut(auth).then(() => {
+                        storeData("email", "");
+                        storeData("password", "");
+                        storeData("username", "");
+                        navigation.navigate("Authentication")
+                    })
+                }}>
+                    <View style={styles.menuItem}>
+                        <Feather
+                            name="log-out"
+                            color={COLORS.black}
+                            size={25}
+                        />
+                        <Text style={styles.menuItemText}>Logout</Text>
+                    </View>
+                </TouchableRipple>
+            </ScrollView>
         </SafeAreaView>
     );
 };

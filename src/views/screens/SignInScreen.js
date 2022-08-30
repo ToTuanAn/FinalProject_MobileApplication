@@ -85,32 +85,6 @@ const SignInScreen = ({navigation}) => {
         };
     };
 
-    useEffect(async () => {
-        console.log('RUNNNN');
-        try {
-            const email = await retrieveData('email');
-            const pass = await retrieveData('password');
-
-            if (!email || !pass) return;
-
-            await signInWithEmailAndPassword(auth, email, pass)
-                .then(userCredentials => {
-                    const user = userCredentials.user;
-                    if (Platform.OS === 'android') {
-                        ToastAndroid.show(
-                            'Log in successfully',
-                            ToastAndroid.SHORT,
-                        );
-                    }
-
-                    navigation.navigate('HomeScreen');
-                })
-                .catch(() => console.log("CAN'T SIGN IN"));
-        } catch {
-            console.log('Error');
-        }
-    }, []);
-
     return (
         <View style={style.container}>
             <StatusBar
