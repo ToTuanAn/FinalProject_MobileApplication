@@ -23,7 +23,6 @@ const DetailsScreen = ({navigation, route}) => {
     const user = auth.currentUser;
     const userDocRef = doc(db, 'users', user.uid);
     const [userFavor, setUserFavor] = useState([]);
-    const [contentOffset, setContentOffset] = useState(0);
     
     const offsetRef = useRef(new Animated.Value(400)).current;
 
@@ -163,8 +162,8 @@ const DetailsScreen = ({navigation, route}) => {
             <ScrollView 
                 onScroll={e => {
                     const offset = e.nativeEvent.contentOffset.y;
-                    if (offset > 250) return
-                    changeOffset(400 - offset);
+                    if (offset > 500) return
+                    changeOffset(400 - offset/2)
                 }}>
                 {/* Render user image , name and date */}
                 <View style={{flexDirection: 'row', paddingHorizontal: 20}}>
