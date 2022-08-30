@@ -13,15 +13,17 @@ import {
 import React, {useState, useEffect} from 'react';
 import COLORS from '../../const/colors';
 import * as Animatable from 'react-native-animatable';
-import {GradientButton} from '../../components';
+import {GradientButton, Loading} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import pets from '../../const/pets';
 import {db, auth} from '../../../firebase';
 import {collection, getDocs, getDoc, doc, updateDoc} from 'firebase/firestore';
+
 import {Card} from '../../components';
 import { ActivityIndicator } from 'react-native-paper';
-import {Loading} from '../../components';
+import {userConverter} from '../converters/User';
+import {IMAGE_LOAD_FAILED} from '../../const';
 
 const {height} = Dimensions.get('window');
 

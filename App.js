@@ -12,6 +12,7 @@ import EditProfileScreen from './src/views/screens/EditProfileScreen';
 import InfoOwner from './src/views/screens/InfoOwner';
 import FavoriteScreen from './src/views/screens/FavoriteScreen';
 import {LogBox} from 'react-native';
+import DonateScreen from './src/views/screens/DonateScreen';
 
 LogBox.ignoreLogs(['Setting a timer']);
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ const App = () => {
                 <Stack.Screen name="SignInScreen" component={SignInScreen} />
                 <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
                 <Stack.Screen name="HomeScreen" component={DrawerNavigator} />
+                <Stack.Screen name="DonateScreen" component={DonateScreen} />
                 <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
                 <Stack.Screen name="InfoOwner" component={InfoOwner} />
                 <Stack.Screen
