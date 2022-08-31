@@ -20,6 +20,7 @@ import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {collection, addDoc, setDoc, doc} from 'firebase/firestore';
 import {ScrollView} from 'react-native-gesture-handler';
 import {GradientButton} from '../../components';
+import {storeData, retrieveData} from '../../utils';
 
 const SignUpScreen = ({navigation}) => {
     const [isLoading, setIsLoading] = useState(null);
